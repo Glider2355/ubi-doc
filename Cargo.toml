@@ -1,0 +1,8 @@
+[package]
+name = "ubiquitous-generator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tree-sitter = "0.24.6"
+tree-sitter-php = "0.23.11"
