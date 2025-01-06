@@ -1,3 +1,5 @@
+use parser::get_comment;
+
 mod parser;
 
 fn main() {
@@ -15,7 +17,7 @@ fn main() {
 "#;
 
     // parser.rs の get_comments 関数を使ってコメントを取得
-    let comments = parser::get_comments(code);
+    let comments = get_comment(code);
 
     println!("--- Comments ---");
     for comment in comments {
