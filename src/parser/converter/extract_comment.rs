@@ -1,6 +1,11 @@
+
+pub fn extract_comments(comments: Vec<String>)-> Vec<String> {
+    comments.into_iter().map(extract_comment).collect()
+}
+
 /// コメント文字列から `//`, `/* ... */`, `/** ... */` を取り除き、
 /// DocBlock(`/**`)の場合は行頭の `*` も除去する。
-pub fn extract_comment(comment: String) -> String {
+fn extract_comment(comment: String) -> String {
     let comment = comment.trim();
 
     // 1行コメント: `// ...`

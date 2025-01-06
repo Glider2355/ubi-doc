@@ -1,9 +1,6 @@
 use tree_sitter::Parser;
-use super::converter::extract_comment;
+use super::converter::extract_comments;
 
-/// 指定された PHP コードからすべてのコメントを取得する関数
-/// コメント文字列から `//` や `/* ... */`、`/** ... */` を除去し、
-/// 各行先頭の `*` や余分な空白も可能な限り取り除きます。
 pub fn get_comments(code: &str) -> Vec<String> {
     let source_code = code.as_bytes();
 
@@ -27,7 +24,7 @@ pub fn get_comments(code: &str) -> Vec<String> {
     visit_node(root_node, source_code, &mut comments);
 
     // コメント文字列をクリーニング
-    comments.into_iter().map(extract_comment).collect()
+    extract_comments(comments)
 }
 
 /// 再帰関数でノードを巡回し、comment ノードがあればベクタに追加
