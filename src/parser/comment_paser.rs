@@ -1,5 +1,6 @@
 use tree_sitter::Parser;
 use super::converter::extract_comments;
+use super::comment_node_collect::comment_node_collect;
 
 pub fn get_comments(code: &str) -> Vec<String> {
     let source_code = code.as_bytes();
@@ -21,27 +22,10 @@ pub fn get_comments(code: &str) -> Vec<String> {
     let mut comments = Vec::new();
 
     // ノードを再帰的に巡回しコメントを収集
-    visit_node(root_node, source_code, &mut comments);
+    comment_node_collect(root_node, source_code, &mut comments);
 
     // コメント文字列をクリーニング
     extract_comments(comments)
-}
-
-/// 再帰関数でノードを巡回し、comment ノードがあればベクタに追加
-fn visit_node(node: tree_sitter::Node, source_code: &[u8], comments: &mut Vec<String>) {
-    // コメントノード
-    if node.kind() == "comment" {
-        if let Ok(comment_text) = node.utf8_text(source_code) {
-            comments.push(comment_text.to_string());
-        }
-    }
-
-    // 子ノードを再帰的に探索
-    for i in 0..node.child_count() {
-        if let Some(child) = node.child(i) {
-            visit_node(child, source_code, comments);
-        }
-    }
 }
 
 #[cfg(test)]
