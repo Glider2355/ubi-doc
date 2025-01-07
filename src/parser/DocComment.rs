@@ -1,5 +1,6 @@
 struct DocComment {
-    pub ubiquitous_name: String,
-    pub ubiquitous_category: String,
+    pub class_name: String,
+    pub ubiquitous: String,
+    pub context: String,
     pub description: String,
 }

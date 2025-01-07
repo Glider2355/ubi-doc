@@ -11,7 +11,7 @@ fn main() {
     /* ブロックコメント */
     /**
     * タグ無しのコメント
-    * @タグ タグの説明
+    * @ubiquitous ubiquitous langage
     */
 ?>
 "#;
