@@ -1,6 +1,5 @@
 use tree_sitter::Parser;
-use super::converter::extract_ubiquitous;
-use super::comment_node_collect::comment_node_collect;
+use super::{comment_node_collect::comment_node_collect, extract_ubiquitous::extract_ubiquitous};
 
 pub fn get_comments(code: &str) -> Vec<String> {
     let source_code = code.as_bytes();
