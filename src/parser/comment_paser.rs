@@ -17,11 +17,8 @@ pub fn get_comments(code: &str) -> Vec<String> {
     // ルートノードを取得
     let root_node = tree.root_node();
 
-    // コメントを格納するベクタ
-    let mut comments = Vec::new();
-
     // ノードを再帰的に巡回しコメントを収集
-    comment_node_collect(root_node, source_code, &mut comments);
+    let comments = comment_node_collect(root_node, source_code);
 
     // コメント文字列をクリーニング
     extract_ubiquitous(comments)
