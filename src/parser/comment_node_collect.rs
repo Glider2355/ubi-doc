@@ -44,9 +44,7 @@ mod tests {
             .expect("Error loading PHP parser");
 
         // 2. コードをパースしてツリーを生成
-        let tree = parser
-            .parse(code, None)
-            .expect("Failed to parse code");
+        let tree = parser.parse(code, None).expect("Failed to parse code");
         let root_node = tree.root_node();
 
         // 3. テスト対象の関数を呼び出し

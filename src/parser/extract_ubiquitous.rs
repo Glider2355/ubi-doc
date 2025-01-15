@@ -14,7 +14,7 @@ fn get_ubiquitous(comment: String) -> ubiquitous::Ubiquitous {
 
     for line in comment.lines() {
         let line = line.trim();
-        
+
         // @ubiquitous
         if let Some(pos) = line.find("@ubiquitous") {
             let tag_len = "@ubiquitous".len();
@@ -46,8 +46,8 @@ fn get_ubiquitous(comment: String) -> ubiquitous::Ubiquitous {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::ubiquitous::Ubiquitous;
+    use super::*;
 
     #[test]
     fn test_extract_ubiquitous_empty() {
@@ -78,7 +78,7 @@ mod tests {
     #[test]
     fn test_extract_ubiquitous_multi_fields() {
         let comments = vec![String::from(
-r#"/**
+            r#"/**
  * @ubiquitous ubiquitous_lang
  * @context context_example
  * @description description_text
