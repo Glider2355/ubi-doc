@@ -1,7 +1,6 @@
 pub mod comment_node_collect;
 pub mod comment_paser;
 pub mod extract_ubiquitous;
-pub mod guess_language_by_extension;
 pub mod ubiquitous;
 
 pub fn get_comment(code: &str) -> Vec<String> {
