@@ -1,6 +1,5 @@
 use parser::get_comment;
 
-mod file_io;
 mod parser;
 
 fn main() {
@@ -28,6 +27,7 @@ fn main() {
 ?>
 "#;
 
+    let path = "tests/fixtures/sample.php";
     // parser.rs の get_comments 関数を使ってコメントを取得
     let comments = get_comment(code);
 

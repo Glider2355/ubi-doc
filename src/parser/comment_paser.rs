@@ -9,6 +9,7 @@ pub fn get_comments(code: &str) -> Vec<Ubiquitous> {
 
     // PHP 言語用のパーサを作成
     let mut parser = Parser::new();
+
     let language = tree_sitter_php::LANGUAGE_PHP;
     parser
         .set_language(&language.into())

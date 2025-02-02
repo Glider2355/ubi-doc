@@ -1,47 +1,27 @@
+use std::path::Path;
+
+// let language = parser::language::Language::from_path(&path);
+// println!("Language: {:?}", language);
+
+#[derive(Debug, PartialEq)]
 pub enum Language {
-    Php(CommentOutSyntax),
-    // Rust(CommentOutSyntax),
-    // Java(CommentOutSyntax),
-}
-
-pub struct CommentOutSyntax {
-    single_line_patterns: Vec<String>,
-    doc: Option<DocCommentSyntax>,
-}
-
-#[derive(Debug)]
-pub struct DocCommentSyntax {
-    pub start: String,
-    pub middle: String,
-    pub end: String,
+    Php,
+    Rust,
+    Java,
+    Unknown(String),
 }
 
 impl Language {
-    pub fn new_php() -> Self {
-        Language::Php(CommentOutSyntax {
-            single_line_patterns: vec!["//".to_string(), "#".to_string()],
-            doc: Some(DocCommentSyntax {
-                start: "/**".to_string(),
-                middle: "*".to_string(),
-                end: "*/".to_string(),
-            }),
-        })
-    }
-
-    pub fn syntax(&self) -> &CommentOutSyntax {
-        match self {
-            Language::Php(syntax) => syntax,
+    /// ディレクトリパスやファイルパスを受け取り、拡張子を判別して `Language` を返す
+    pub fn from_path<P: AsRef<Path>>(path: &P) -> Self {
+        let p = path.as_ref();
+        match p.extension().and_then(|ext| ext.to_str()) {
+            Some("php") => Language::Php,
+            Some("rs") => Language::Rust,
+            Some("java") => Language::Java,
+            Some(other) => Language::Unknown(other.to_string()),
+            None => Language::Unknown("no_ext".to_string()),
         }
-    }
-}
-
-impl CommentOutSyntax {
-    pub fn single_line_patterns(&self) -> &Vec<String> {
-        &self.single_line_patterns
-    }
-
-    pub fn doc_comment(&self) -> Option<&DocCommentSyntax> {
-        self.doc.as_ref()
     }
 }
 
@@ -50,17 +30,23 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_php_doc_syntax() {
-        let php = Language::new_php();
-        let doc = php.syntax().doc_comment().unwrap();
-        assert_eq!(doc.start, "/**");
-        assert_eq!(doc.middle, "*");
-        assert_eq!(doc.end, "*/");
-    }
+    fn test_from_path() {
+        let cases = [
+            ("index.php", Language::Php),
+            ("main.rs", Language::Rust),
+            ("HelloWorld.java", Language::Java),
+            ("src/unknown.xyz", Language::Unknown("xyz".into())),
+            ("some/directory/", Language::Unknown("no_ext".into())),
+            ("file_without_ext", Language::Unknown("no_ext".into())),
+        ];
 
-    #[test]
-    fn test_php_single_line_syntax() {
-        let php = Language::new_php();
-        assert_eq!(php.syntax().single_line_patterns(), &["//", "#"]);
+        for (input, expected) in cases {
+            let got = Language::from_path(&input);
+            assert_eq!(
+                got, expected,
+                "Language::from_path(\"{input}\") => {:?}, but expected {:?}",
+                got, expected
+            );
+        }
     }
 }
