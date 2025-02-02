@@ -1,5 +1,6 @@
 use super::{
-    extract_ubiquitous::extract_ubiquitous, php::comment_node_collect::comment_node_collect, ubiquitous::Ubiquitous
+    php::{comment_node_collect::comment_node_collect, extract_ubiquitous::extract_ubiquitous},
+    ubiquitous::Ubiquitous,
 };
 use tree_sitter::Parser;
 

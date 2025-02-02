@@ -1,4 +1,4 @@
-use super::ubiquitous;
+use crate::parser::ubiquitous;
 
 pub fn extract_ubiquitous(comments: Vec<String>) -> Vec<ubiquitous::Ubiquitous> {
     comments

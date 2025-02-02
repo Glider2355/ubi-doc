@@ -1,7 +1,7 @@
 use parser::get_comment;
 
-mod parser;
 mod file_io;
+mod parser;
 
 fn main() {
     // file_io
@@ -14,7 +14,6 @@ fn main() {
     // Step6: ユビキタス言語を抽出する
     // output
     // Step7: HTMLに出力する
-
 
     let code = r#"
 <?php
