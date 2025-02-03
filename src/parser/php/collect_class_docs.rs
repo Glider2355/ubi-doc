@@ -61,3 +61,129 @@ fn find_preceding_doc_comment(node: Node, source_code: &[u8]) -> Option<String> 
     }
     None
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tree_sitter::Parser;
+
+    #[test]
+    fn test_collect_class_docs_simple() {
+        let code = r#"
+<?php
+/**
+ * Foo class doc
+ */
+class Foo {
+}
+"#;
+
+        // 1. パーサーの用意 & PHP 言語を設定
+        let mut parser = Parser::new();
+        let language = tree_sitter_php::LANGUAGE_PHP;
+        parser
+            .set_language(&language.into())
+            .expect("Error loading PHP parser");
+
+        // 2. コードをパースして抽象構文木(AST)を取得
+        let tree = parser.parse(code, None).expect("Failed to parse code");
+        let root_node = tree.root_node();
+
+        // 3. テスト対象の関数を呼び出し
+        let docs = collect_class_docs(root_node, code.as_bytes());
+
+        // 4. 結果を検証
+        // Foo クラスが1つだけ取得される
+        assert_eq!(docs.len(), 1);
+        assert_eq!(docs[0].class_name, "Foo");
+        assert!(docs[0].doc_comment.contains("Foo class doc"));
+    }
+
+    #[test]
+    fn test_collect_class_docs_multiple() {
+        let code = r#"
+<?php
+/**
+ * Doc for Foo
+ */
+class Foo {
+}
+
+/**
+ * Doc for Bar
+ */
+class Bar {}
+
+/**
+ * This is not a class
+ */
+function baz() {}
+"#;
+
+        let mut parser = Parser::new();
+        let language = tree_sitter_php::LANGUAGE_PHP;
+        parser.set_language(&language.into()).unwrap();
+
+        let tree = parser.parse(code, None).unwrap();
+        let root_node = tree.root_node();
+
+        let docs = collect_class_docs(root_node, code.as_bytes());
+
+        // Foo と Bar の2クラスが取得される
+        assert_eq!(docs.len(), 2);
+
+        assert_eq!(docs[0].class_name, "Foo");
+        assert!(docs[0].doc_comment.contains("Doc for Foo"));
+        assert_eq!(docs[1].class_name, "Bar");
+        assert!(docs[1].doc_comment.contains("Doc for Bar"));
+    }
+
+    #[test]
+    fn test_collect_class_docs_no_doc() {
+        let code = r#"
+<?php
+// これはクラスの上に DocBlock がない例
+class NoDocClass {
+}
+"#;
+
+        let mut parser = Parser::new();
+        let language = tree_sitter_php::LANGUAGE_PHP;
+        parser.set_language(&language.into()).unwrap();
+
+        let tree = parser.parse(code, None).unwrap();
+        let root_node = tree.root_node();
+
+        let docs = collect_class_docs(root_node, code.as_bytes());
+
+        // DocBlock が付いていないので 0 件
+        assert_eq!(docs.len(), 0);
+    }
+
+    #[test]
+    fn test_collect_class_docs_docblock_and_comment() {
+        let code = r#"
+<?php
+// 一般的なコメント (DocBlock ではない)
+/// Another style comment (C# style, not recognized as doc)
+/**
+ * Actual DocBlock
+ */
+class WithDocBlock {}
+"#;
+
+        let mut parser = Parser::new();
+        let language = tree_sitter_php::LANGUAGE_PHP;
+        parser.set_language(&language.into()).unwrap();
+
+        let tree = parser.parse(code, None).unwrap();
+        let root_node = tree.root_node();
+
+        let docs = collect_class_docs(root_node, code.as_bytes());
+
+        // WithDocBlock クラスが1件見つかるはず
+        assert_eq!(docs.len(), 1);
+        assert_eq!(docs[0].class_name, "WithDocBlock");
+        assert!(docs[0].doc_comment.contains("Actual DocBlock"));
+    }
+}
