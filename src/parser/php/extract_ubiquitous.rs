@@ -14,6 +14,8 @@ fn get_ubiquitous(class_doc: ClassDoc) -> ubiquitous::Ubiquitous {
     let comment = class_doc.doc_comment.trim();
     let mut result = ubiquitous::Ubiquitous::new();
 
+    result = result.set_class_name(class_doc.class_name);
+
     for line in comment.lines() {
         let line = line.trim();
 
@@ -72,7 +74,9 @@ mod tests {
         assert_eq!(result.len(), 1);
         assert_eq!(
             result[0],
-            Ubiquitous::new().set_ubiquitous("ubiquitous_lang".to_string())
+            Ubiquitous::new()
+                .set_class_name("class_name".to_string())
+                .set_ubiquitous("ubiquitous_lang".to_string())
         );
     }
 
@@ -91,6 +95,7 @@ mod tests {
         assert_eq!(result.len(), 1);
 
         let expected = Ubiquitous::new()
+            .set_class_name("class_name".to_string())
             .set_ubiquitous("ubiquitous_lang".to_string())
             .set_context("context_example".to_string())
             .set_description("description_text".to_string());

@@ -16,6 +16,11 @@ impl Ubiquitous {
         }
     }
 
+    pub fn set_class_name(mut self, class_name: String) -> Self {
+        self.class_name = Some(class_name);
+        self
+    }
+
     pub fn set_ubiquitous(mut self, ubiquitous: String) -> Self {
         self.ubiquitous = Some(ubiquitous);
         self
