@@ -1,16 +1,19 @@
 use crate::parser::ubiquitous;
 
-use super::collect_class_docs::ClassDoc;
+pub struct ExtractUbiquitousParam {
+    pub class_name: String,
+    pub doc_comment: String,
+}
 
-pub fn extract_ubiquitous(comments: Vec<ClassDoc>) -> Vec<ubiquitous::Ubiquitous> {
-    comments
+pub fn extract_ubiquitous(class_docs: Vec<ExtractUbiquitousParam>) -> Vec<ubiquitous::Ubiquitous> {
+    class_docs
         .into_iter()
         .map(get_ubiquitous)
         .filter(|u| !u.is_all_none())
         .collect()
 }
 
-fn get_ubiquitous(class_doc: ClassDoc) -> ubiquitous::Ubiquitous {
+fn get_ubiquitous(class_doc: ExtractUbiquitousParam) -> ubiquitous::Ubiquitous {
     let comment = class_doc.doc_comment.trim();
     let mut result = ubiquitous::Ubiquitous::new();
 
@@ -63,14 +66,14 @@ mod tests {
 
     #[test]
     fn test_extract_ubiquitous_single() {
-        let doc_comments = vec![ClassDoc {
+        let class_docs = vec![ExtractUbiquitousParam {
             class_name: "class_name".to_string(),
             doc_comment: r#"/**
     * @ubiquitous ubiquitous_lang
     */"#
             .to_string(),
         }];
-        let result = extract_ubiquitous(doc_comments);
+        let result = extract_ubiquitous(class_docs);
         assert_eq!(result.len(), 1);
         assert_eq!(
             result[0],
@@ -82,7 +85,7 @@ mod tests {
 
     #[test]
     fn test_extract_ubiquitous_multi_fields() {
-        let doc_comments = vec![ClassDoc {
+        let class_docs = vec![ExtractUbiquitousParam {
             class_name: "class_name".to_string(),
             doc_comment: r#"/**
     * @ubiquitous ubiquitous_lang
@@ -91,7 +94,7 @@ mod tests {
     */"#
             .to_string(),
         }];
-        let result = extract_ubiquitous(doc_comments);
+        let result = extract_ubiquitous(class_docs);
         assert_eq!(result.len(), 1);
 
         let expected = Ubiquitous::new()
