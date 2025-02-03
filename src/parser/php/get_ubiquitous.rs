@@ -2,9 +2,7 @@ use tree_sitter::Parser;
 
 use crate::parser::ubiquitous::Ubiquitous;
 
-use super::{
-    extract_ubiquitous::extract_ubiquitous, ubiquitous_node_collect::ubiquitous_node_collect,
-};
+use super::{collect_class_docs::collect_class_docs, extract_ubiquitous::extract_ubiquitous};
 
 pub fn get_ubiquitous(code: &str) -> Vec<Ubiquitous> {
     let source_code = code.as_bytes();
@@ -24,8 +22,8 @@ pub fn get_ubiquitous(code: &str) -> Vec<Ubiquitous> {
     let root_node = tree.root_node();
 
     // ノードを再帰的に巡回しコメントを収集
-    let comments = ubiquitous_node_collect(root_node, source_code);
+    let class_doc = collect_class_docs(root_node, source_code);
 
     // コメント文字列をクリーニング
-    extract_ubiquitous(comments)
+    extract_ubiquitous(class_doc)
 }

@@ -1,6 +1,8 @@
 use crate::parser::ubiquitous;
 
-pub fn extract_ubiquitous(comments: Vec<String>) -> Vec<ubiquitous::Ubiquitous> {
+use super::collect_class_docs::ClassDoc;
+
+pub fn extract_ubiquitous(comments: Vec<ClassDoc>) -> Vec<ubiquitous::Ubiquitous> {
     comments
         .into_iter()
         .map(get_ubiquitous)
@@ -8,8 +10,8 @@ pub fn extract_ubiquitous(comments: Vec<String>) -> Vec<ubiquitous::Ubiquitous> 
         .collect()
 }
 
-fn get_ubiquitous(comment: String) -> ubiquitous::Ubiquitous {
-    let comment = comment.trim();
+fn get_ubiquitous(class_doc: ClassDoc) -> ubiquitous::Ubiquitous {
+    let comment = class_doc.doc_comment.trim();
     let mut result = ubiquitous::Ubiquitous::new();
 
     for line in comment.lines() {
@@ -51,40 +53,41 @@ mod tests {
 
     #[test]
     fn test_extract_ubiquitous_empty() {
-        let comments = vec![
-            String::from("/* nothing here */"),
-            String::from("// hello world"),
-        ];
+        let doc_comments = vec![];
 
-        let result = extract_ubiquitous(comments);
+        let result = extract_ubiquitous(doc_comments);
         assert!(result.is_empty());
     }
 
     #[test]
     fn test_extract_ubiquitous_single() {
-        let comments = vec![
-            String::from("// normal comment"),
-            String::from("// @ubiquitous first"),
-        ];
-
-        let result = extract_ubiquitous(comments);
+        let doc_comments = vec![ClassDoc {
+            class_name: "class_name".to_string(),
+            doc_comment: r#"/**
+    * @ubiquitous ubiquitous_lang
+    */"#
+            .to_string(),
+        }];
+        let result = extract_ubiquitous(doc_comments);
         assert_eq!(result.len(), 1);
         assert_eq!(
             result[0],
-            Ubiquitous::new().set_ubiquitous("first".to_string())
+            Ubiquitous::new().set_ubiquitous("ubiquitous_lang".to_string())
         );
     }
 
     #[test]
     fn test_extract_ubiquitous_multi_fields() {
-        let comments = vec![String::from(
-            r#"/**
- * @ubiquitous ubiquitous_lang
- * @context context_example
- * @description description_text
- */"#,
-        )];
-        let result = extract_ubiquitous(comments);
+        let doc_comments = vec![ClassDoc {
+            class_name: "class_name".to_string(),
+            doc_comment: r#"/**
+    * @ubiquitous ubiquitous_lang
+    * @context context_example
+    * @description description_text
+    */"#
+            .to_string(),
+        }];
+        let result = extract_ubiquitous(doc_comments);
         assert_eq!(result.len(), 1);
 
         let expected = Ubiquitous::new()
