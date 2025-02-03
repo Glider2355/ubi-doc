@@ -1,6 +1,6 @@
 use std::error::Error;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use walkdir::WalkDir;
 
 /// ファイルのコードと拡張子を保持する構造体

@@ -16,19 +16,6 @@ fn main() {
     // output
     // Step7: HTMLに出力する
 
-    let code = r#"
-<?php
-    // 1行目のコメント
-    echo "Hello, World!";
-    // 2行目のコメント
-    /* ブロックコメント */
-    /**
-    * タグ無しのコメント
-    * @ubiquitous ubiquitous langage
-    */
-?>
-"#;
-
     let path = Path::new("tests/fixtures/sample.php");
     // parser.rs の get_comments 関数を使ってコメントを取得
     let comments = get_comment(path);

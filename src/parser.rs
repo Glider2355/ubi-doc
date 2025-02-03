@@ -2,7 +2,6 @@ use std::path::Path;
 
 pub mod file_io;
 pub mod get_ubiquitous;
-pub mod language;
 pub mod php;
 pub mod ubiquitous;
 
