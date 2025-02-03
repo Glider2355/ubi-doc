@@ -1,8 +1,8 @@
-use super::{
-    php::{comment_node_collect::comment_node_collect, extract_ubiquitous::extract_ubiquitous},
-    ubiquitous::Ubiquitous,
-};
 use tree_sitter::Parser;
+
+use crate::parser::ubiquitous::Ubiquitous;
+
+use super::{comment_node_collect::comment_node_collect, extract_ubiquitous::extract_ubiquitous};
 
 pub fn get_comments(code: &str) -> Vec<Ubiquitous> {
     let source_code = code.as_bytes();

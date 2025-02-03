@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use parser::get_comment;
 
 mod parser;
@@ -27,9 +29,9 @@ fn main() {
 ?>
 "#;
 
-    let path = "tests/fixtures/sample.php";
+    let path = Path::new("tests/fixtures/sample.php");
     // parser.rs の get_comments 関数を使ってコメントを取得
-    let comments = get_comment(code);
+    let comments = get_comment(path);
 
     println!("--- Comments ---");
     for comment in comments {
