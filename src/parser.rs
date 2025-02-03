@@ -1,4 +1,5 @@
 pub mod comment_paser;
+pub mod file_io;
 pub mod language;
 pub mod php;
 pub mod ubiquitous;

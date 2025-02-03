@@ -6,3 +6,5 @@ edition = "2021"
 [dependencies]
 tree-sitter = "0.24.6"
 tree-sitter-php = "0.23.11"
+walkdir = "2"
+tempfile = "3"
