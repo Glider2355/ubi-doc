@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use crate::parser::{
-    file_io::read_sources_from_dir::read_sources_from_dir, php::get_comments::get_comments,
+    file_io::read_sources_from_dir::read_sources_from_dir, php::get_ubiquitous::get_ubiquitous,
 };
 
 use super::ubiquitous::Ubiquitous;
@@ -24,7 +24,7 @@ impl FileType {
     }
 }
 
-pub fn get_ubiquitous(path: &Path) -> Vec<Ubiquitous> {
+pub fn get_ubiquitous_list(path: &Path) -> Vec<Ubiquitous> {
     let code_files = match read_sources_from_dir(path) {
         Ok(files) => files,
         Err(_) => return vec![],
@@ -36,7 +36,7 @@ pub fn get_ubiquitous(path: &Path) -> Vec<Ubiquitous> {
     for code_file in code_files {
         match FileType::from_extension(&code_file.extension) {
             FileType::Php => {
-                let comments = get_comments(&code_file.code);
+                let comments = get_ubiquitous(&code_file.code);
                 all_results.extend(comments);
             }
             FileType::Kotlin => {

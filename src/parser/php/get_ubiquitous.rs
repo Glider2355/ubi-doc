@@ -2,9 +2,11 @@ use tree_sitter::Parser;
 
 use crate::parser::ubiquitous::Ubiquitous;
 
-use super::{comment_node_collect::comment_node_collect, extract_ubiquitous::extract_ubiquitous};
+use super::{
+    extract_ubiquitous::extract_ubiquitous, ubiquitous_node_collect::ubiquitous_node_collect,
+};
 
-pub fn get_comments(code: &str) -> Vec<Ubiquitous> {
+pub fn get_ubiquitous(code: &str) -> Vec<Ubiquitous> {
     let source_code = code.as_bytes();
 
     // PHP 言語用のパーサを作成
@@ -22,7 +24,7 @@ pub fn get_comments(code: &str) -> Vec<Ubiquitous> {
     let root_node = tree.root_node();
 
     // ノードを再帰的に巡回しコメントを収集
-    let comments = comment_node_collect(root_node, source_code);
+    let comments = ubiquitous_node_collect(root_node, source_code);
 
     // コメント文字列をクリーニング
     extract_ubiquitous(comments)

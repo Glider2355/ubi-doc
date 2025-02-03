@@ -1,7 +1,7 @@
 use tree_sitter::Node;
 
 /// 指定したノード以下に含まれる「comment」ノードのテキストをすべて返す関数。
-pub fn comment_node_collect(node: Node, source_code: &[u8]) -> Vec<String> {
+pub fn ubiquitous_node_collect(node: Node, source_code: &[u8]) -> Vec<String> {
     let mut comments = Vec::new();
 
     // 自身が「comment」ノードの場合はテキストを取得して push
@@ -15,7 +15,7 @@ pub fn comment_node_collect(node: Node, source_code: &[u8]) -> Vec<String> {
     for i in 0..node.child_count() {
         if let Some(child) = node.child(i) {
             // 子ノードの探索結果を合体 (extend) する
-            comments.extend(comment_node_collect(child, source_code));
+            comments.extend(ubiquitous_node_collect(child, source_code));
         }
     }
 
@@ -48,7 +48,7 @@ mod tests {
         let root_node = tree.root_node();
 
         // 3. テスト対象の関数を呼び出し
-        let comments = comment_node_collect(root_node, code.as_bytes());
+        let comments = ubiquitous_node_collect(root_node, code.as_bytes());
 
         // 4. 結果を検証
         assert_eq!(comments.len(), 1);
@@ -76,7 +76,7 @@ public function test() {
         let tree = parser.parse(code, None).unwrap();
         let root_node = tree.root_node();
 
-        let comments = comment_node_collect(root_node, code.as_bytes());
+        let comments = ubiquitous_node_collect(root_node, code.as_bytes());
 
         assert_eq!(comments.len(), 3);
         assert_eq!(comments[0], "// first comment");
