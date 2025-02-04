@@ -1,6 +1,7 @@
-use std::path::Path;
-
+use outputs::html::generate_html::{generate_html, GenerateHtmlParam};
 use parser::get_ubiquitous_list::get_ubiquitous_list;
+use std::path::Path;
+mod outputs;
 mod parser;
 
 fn main() {
@@ -15,32 +16,52 @@ fn main() {
     // output
     // Step7: HTMLに出力する
 
-    let path = Path::new("tests/fixtures/sample.php");
+    let path = Path::new("tests/fixtures");
     // parser.rs の get_comments 関数を使ってコメントを取得
     let ubiquitous_list = get_ubiquitous_list(path);
 
-    for ubiquitous in ubiquitous_list {
+    for ubiquitous in &ubiquitous_list {
         println!(
             "ubiquitous: {}",
             ubiquitous
                 .ubiquitous
-                .unwrap_or("ubiquitousがNone".to_string())
+                .as_deref()
+                .unwrap_or("ubiquitousがNone")
         );
         println!(
             "class_name: {}",
             ubiquitous
                 .class_name
-                .unwrap_or("class_nameがNone".to_string())
+                .as_deref()
+                .unwrap_or("class_nameがNone")
         );
         println!(
             "context: {}",
-            ubiquitous.context.unwrap_or("contextがNone".to_string())
+            ubiquitous.context.as_deref().unwrap_or("contextがNone")
         );
         println!(
             "description: {}",
             ubiquitous
                 .description
-                .unwrap_or("descriptionがNone".to_string())
+                .as_deref()
+                .unwrap_or("descriptionがNone")
         );
     }
+
+    // output
+    // HTMLに出力する
+    let output_path = Path::new("tests/fixtures/output.html");
+
+    // その後、iter() で参照から再びデータを利用できる
+    let mapped_list: Vec<GenerateHtmlParam> = ubiquitous_list
+        .into_iter()
+        .map(|u| GenerateHtmlParam {
+            class_name: u.class_name.clone().unwrap_or_default(),
+            ubiquitous: u.ubiquitous.clone().unwrap_or_default(),
+            context: u.context.clone().unwrap_or_default(),
+            description: u.description.clone().unwrap_or_default(),
+        })
+        .collect();
+
+    generate_html(mapped_list, output_path);
 }
