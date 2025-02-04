@@ -46,6 +46,17 @@ fn main() {
                 .as_deref()
                 .unwrap_or("descriptionがNone")
         );
+        println!(
+            "file_path: {}",
+            ubiquitous.file_path.as_deref().unwrap_or("file_pathがNone")
+        );
+        println!(
+            "line_number: {}",
+            ubiquitous
+                .line_number
+                .map(|n| n.to_string())
+                .unwrap_or_else(|| "line_numberがNone".to_string())
+        );
     }
 
     // output

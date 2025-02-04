@@ -4,6 +4,7 @@ use tree_sitter::Node;
 pub struct ClassDoc {
     pub class_name: String,
     pub doc_comment: String,
+    pub doc_comment_line: Option<usize>,
 }
 
 /// クラス宣言に付随している Docコメントを探し出し、(クラス名, Docコメント) のリストを返す
@@ -16,10 +17,13 @@ pub fn collect_class_docs(node: Node, source_code: &[u8]) -> Vec<ClassDoc> {
         if let Some(name_node) = node.child_by_field_name("name") {
             if let Ok(class_name) = name_node.utf8_text(source_code) {
                 // クラス直前にある DocBlock コメントを探す
-                if let Some(doc_comment) = find_preceding_doc_comment(node, source_code) {
+                if let Some((doc_comment, doc_comment_line)) =
+                    find_preceding_doc_comment(node, source_code)
+                {
                     results.push(ClassDoc {
                         class_name: class_name.to_string(),
                         doc_comment,
+                        doc_comment_line: Some(doc_comment_line),
                     });
                 }
             }
@@ -37,7 +41,7 @@ pub fn collect_class_docs(node: Node, source_code: &[u8]) -> Vec<ClassDoc> {
 }
 
 /// クラス宣言ノードの直前にある Docコメント(コメントノード)を探して返す
-fn find_preceding_doc_comment(node: Node, source_code: &[u8]) -> Option<String> {
+fn find_preceding_doc_comment(node: Node, source_code: &[u8]) -> Option<(String, usize)> {
     // 兄弟ノードを逆方向にたどりながらコメントを探す
     let mut current = node.prev_sibling();
     while let Some(prev) = current {
@@ -47,7 +51,8 @@ fn find_preceding_doc_comment(node: Node, source_code: &[u8]) -> Option<String> 
                 // 今回は「Docコメント = '/**' で始まるもの」と簡易的に判断
                 // 必要に応じてもう少し厳密にチェック
                 if comment_text.trim_start().starts_with("/**") {
-                    return Some(comment_text.to_string());
+                    let line = prev.start_position().row + 1;
+                    return Some((comment_text.to_string(), line));
                 }
             }
         }
@@ -97,6 +102,7 @@ class Foo {
         assert_eq!(docs.len(), 1);
         assert_eq!(docs[0].class_name, "Foo");
         assert!(docs[0].doc_comment.contains("Foo class doc"));
+        assert_eq!(docs[0].doc_comment_line, Some(3));
     }
 
     #[test]
@@ -134,8 +140,10 @@ function baz() {}
 
         assert_eq!(docs[0].class_name, "Foo");
         assert!(docs[0].doc_comment.contains("Doc for Foo"));
+        assert_eq!(docs[0].doc_comment_line, Some(3));
         assert_eq!(docs[1].class_name, "Bar");
         assert!(docs[1].doc_comment.contains("Doc for Bar"));
+        assert_eq!(docs[1].doc_comment_line, Some(9));
     }
 
     #[test]
@@ -185,5 +193,6 @@ class WithDocBlock {}
         assert_eq!(docs.len(), 1);
         assert_eq!(docs[0].class_name, "WithDocBlock");
         assert!(docs[0].doc_comment.contains("Actual DocBlock"));
+        assert_eq!(docs[0].doc_comment_line, Some(5));
     }
 }

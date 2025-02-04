@@ -8,6 +8,7 @@ use walkdir::WalkDir;
 pub struct CodeFile {
     pub code: String,
     pub extension: String,
+    pub file_path: String,
 }
 
 /// ディレクトリ配下のソースコードを再帰的に走査して、CodeFile のリストを返す
@@ -24,6 +25,7 @@ pub fn read_sources_from_dir(dir_path: &Path) -> Result<Vec<CodeFile>, Box<dyn E
                 result.push(CodeFile {
                     code,
                     extension: ext_str,
+                    file_path: path.to_string_lossy().to_string(),
                 });
             }
         }
@@ -113,6 +115,29 @@ mod tests {
 
         assert!(has_rs, ".rs ファイルが見つかりませんでした");
         assert!(has_txt, ".txt ファイルが見つかりませんでした");
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_file_path() -> Result<(), Box<dyn Error>> {
+        // 一時ディレクトリを作成
+        let dir = tempdir()?;
+        // ダミーファイルを作成 (.rs ファイル)
+        let file_path = dir.path().join("sample.rs");
+        let mut file = File::create(&file_path)?;
+        writeln!(file, "fn sample() {{ println!(\"file_path test\"); }}")?;
+
+        // テスト対象関数を呼び出し
+        let results = read_sources_from_dir(dir.path())?;
+        // 期待値: ファイルは1つだけのはず
+        assert_eq!(results.len(), 1);
+
+        let code_file = &results[0];
+
+        // 生成された file_path と、実際のファイルパスの文字列表現が一致するかを検証
+        let expected_path = file_path.to_string_lossy().to_string();
+        assert_eq!(&code_file.file_path, &expected_path);
 
         Ok(())
     }

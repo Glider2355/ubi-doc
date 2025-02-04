@@ -4,6 +4,8 @@ pub struct Ubiquitous {
     pub ubiquitous: Option<String>,
     pub context: Option<String>,
     pub description: Option<String>,
+    pub file_path: Option<String>,
+    pub line_number: Option<usize>,
 }
 
 impl Ubiquitous {
@@ -13,6 +15,8 @@ impl Ubiquitous {
             ubiquitous: None,
             context: None,
             description: None,
+            file_path: None,
+            line_number: None,
         }
     }
 
@@ -33,6 +37,16 @@ impl Ubiquitous {
 
     pub fn set_description(mut self, description: String) -> Self {
         self.description = Some(description);
+        self
+    }
+
+    pub fn set_file_path(mut self, file_path: String) -> Self {
+        self.file_path = Some(file_path);
+        self
+    }
+
+    pub fn set_line_number(mut self, line_number: usize) -> Self {
+        self.line_number = Some(line_number);
         self
     }
 

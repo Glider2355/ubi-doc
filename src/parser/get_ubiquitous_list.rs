@@ -36,7 +36,7 @@ pub fn get_ubiquitous_list(path: &Path) -> Vec<Ubiquitous> {
     for code_file in code_files {
         match FileType::from_extension(&code_file.extension) {
             FileType::Php => {
-                let ubiquitous = get_ubiquitous(&code_file.code);
+                let ubiquitous = get_ubiquitous(&code_file.code, &code_file.file_path);
                 all_results.extend(ubiquitous);
             }
             FileType::Kotlin => {

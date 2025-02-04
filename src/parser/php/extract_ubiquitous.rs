@@ -1,11 +1,13 @@
-use crate::parser::ubiquitous;
+use crate::parser::ubiquitous::Ubiquitous;
 
 pub struct ExtractUbiquitousParam {
     pub class_name: String,
     pub doc_comment: String,
+    pub file_path: String,
+    pub line_number: usize,
 }
 
-pub fn extract_ubiquitous(class_docs: Vec<ExtractUbiquitousParam>) -> Vec<ubiquitous::Ubiquitous> {
+pub fn extract_ubiquitous(class_docs: Vec<ExtractUbiquitousParam>) -> Vec<Ubiquitous> {
     class_docs
         .into_iter()
         .map(get_ubiquitous)
@@ -13,21 +15,22 @@ pub fn extract_ubiquitous(class_docs: Vec<ExtractUbiquitousParam>) -> Vec<ubiqui
         .collect()
 }
 
-fn get_ubiquitous(class_doc: ExtractUbiquitousParam) -> ubiquitous::Ubiquitous {
+fn get_ubiquitous(class_doc: ExtractUbiquitousParam) -> Ubiquitous {
     let comment = class_doc.doc_comment.trim();
-    let mut result = ubiquitous::Ubiquitous::new();
+    let mut result = Ubiquitous::new();
 
     result = result.set_class_name(class_doc.class_name);
 
-    for line in comment.lines() {
+    for (line_index, line) in comment.lines().enumerate() {
         let line = line.trim();
+        let current_line = line_index + class_doc.line_number;
 
-        // @ubiquitous
+        // @ubiquitous (line_numberも更新)
         if let Some(pos) = line.find("@ubiquitous") {
             let tag_len = "@ubiquitous".len();
             if pos + tag_len <= line.len() {
                 let val = line[pos + tag_len..].trim().to_string();
-                result = result.set_ubiquitous(val);
+                result = result.set_ubiquitous(val).set_line_number(current_line);
             }
         }
         // @context
@@ -47,13 +50,13 @@ fn get_ubiquitous(class_doc: ExtractUbiquitousParam) -> ubiquitous::Ubiquitous {
             }
         }
     }
+    result = result.set_file_path(class_doc.file_path.clone());
 
     result
 }
 
 #[cfg(test)]
 mod tests {
-    use super::ubiquitous::Ubiquitous;
     use super::*;
 
     #[test]
@@ -72,6 +75,8 @@ mod tests {
     * @ubiquitous ubiquitous_lang
     */"#
             .to_string(),
+            file_path: "tmp/saple.php".to_string(),
+            line_number: 2,
         }];
         let result = extract_ubiquitous(class_docs);
         assert_eq!(result.len(), 1);
@@ -80,6 +85,8 @@ mod tests {
             Ubiquitous::new()
                 .set_class_name("class_name".to_string())
                 .set_ubiquitous("ubiquitous_lang".to_string())
+                .set_file_path("tmp/saple.php".to_string())
+                .set_line_number(3)
         );
     }
 
@@ -88,11 +95,14 @@ mod tests {
         let class_docs = vec![ExtractUbiquitousParam {
             class_name: "class_name".to_string(),
             doc_comment: r#"/**
+    *
     * @ubiquitous ubiquitous_lang
     * @context context_example
     * @description description_text
     */"#
             .to_string(),
+            file_path: "tmp/saple.php".to_string(),
+            line_number: 3,
         }];
         let result = extract_ubiquitous(class_docs);
         assert_eq!(result.len(), 1);
@@ -101,7 +111,9 @@ mod tests {
             .set_class_name("class_name".to_string())
             .set_ubiquitous("ubiquitous_lang".to_string())
             .set_context("context_example".to_string())
-            .set_description("description_text".to_string());
+            .set_description("description_text".to_string())
+            .set_file_path("tmp/saple.php".to_string())
+            .set_line_number(5);
         assert_eq!(result[0], expected);
     }
 }

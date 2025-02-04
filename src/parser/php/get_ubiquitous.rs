@@ -7,7 +7,7 @@ use super::{
     extract_ubiquitous::{extract_ubiquitous, ExtractUbiquitousParam},
 };
 
-pub fn get_ubiquitous(code: &str) -> Vec<Ubiquitous> {
+pub fn get_ubiquitous(code: &str, file_path: &str) -> Vec<Ubiquitous> {
     let source_code = code.as_bytes();
 
     // PHP 言語用のパーサを作成
@@ -32,6 +32,8 @@ pub fn get_ubiquitous(code: &str) -> Vec<Ubiquitous> {
         .map(|doc| ExtractUbiquitousParam {
             class_name: doc.class_name,
             doc_comment: doc.doc_comment,
+            file_path: file_path.to_string(),
+            line_number: doc.doc_comment_line.unwrap_or(0),
         })
         .collect();
 
