@@ -1,4 +1,8 @@
-use std::{fs::File, io::Write, path::Path};
+use std::{
+    fs::{self, File},
+    io::Write,
+    path::Path,
+};
 
 pub struct GenerateHtmlParam {
     pub class_name: String,
@@ -10,6 +14,11 @@ pub struct GenerateHtmlParam {
 }
 
 pub fn generate_html(ubiquitous_list: Vec<GenerateHtmlParam>, output_path: &Path) {
+    // 出力先ディレクトリが存在しない場合は作成する
+    if let Some(parent) = output_path.parent() {
+        fs::create_dir_all(parent).unwrap();
+    }
+
     let mut html = String::new();
     html.push_str("<html>\n");
     html.push_str("  <head>\n");
