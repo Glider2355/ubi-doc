@@ -5,6 +5,8 @@ pub struct GenerateHtmlParam {
     pub ubiquitous: String,
     pub context: String,
     pub description: String,
+    pub file_path: String,
+    pub line_number: usize,
 }
 
 pub fn generate_html(ubiquitous_list: Vec<GenerateHtmlParam>, output_path: &Path) {
@@ -16,7 +18,7 @@ pub fn generate_html(ubiquitous_list: Vec<GenerateHtmlParam>, output_path: &Path
     html.push_str("  <body>\n");
     html.push_str("    <h1>Ubiquitous Language</h1>\n");
     html.push_str("    <table border='1'>\n");
-    html.push_str("      <tr><th>Ubiquitous</th><th>Class Name</th><th>Context</th><th>Description</th></tr>\n");
+    html.push_str("      <tr><th>Ubiquitous</th><th>Class Name</th><th>Context</th><th>Description</th><th>File Path</th></tr>\n");
 
     for ubiquitous in ubiquitous_list {
         html.push_str("      <tr>\n");
@@ -24,6 +26,10 @@ pub fn generate_html(ubiquitous_list: Vec<GenerateHtmlParam>, output_path: &Path
         html.push_str(&format!("        <td>{}</td>\n", ubiquitous.class_name));
         html.push_str(&format!("        <td>{}</td>\n", ubiquitous.context));
         html.push_str(&format!("        <td>{}</td>\n", ubiquitous.description));
+        html.push_str(&format!(
+            "        <td>{}</td>\n",
+            ubiquitous.file_path + ":" + &ubiquitous.line_number.to_string()
+        ));
         html.push_str("      </tr>\n");
     }
 
@@ -50,12 +56,16 @@ mod tests {
                 ubiquitous: "ユビキタス".to_string(),
                 context: "ユーザー".to_string(),
                 description: "ユーザー情報".to_string(),
+                file_path: "src/user.rs".to_string(),
+                line_number: 10,
             },
             GenerateHtmlParam {
                 class_name: "Item".to_string(),
                 ubiquitous: "ユビキタス".to_string(),
                 context: "アイテム".to_string(),
                 description: "アイテム情報".to_string(),
+                file_path: "src/item.rs".to_string(),
+                line_number: 20,
             },
         ];
 
@@ -79,7 +89,7 @@ mod tests {
         assert!(html_content.contains("<h1>Ubiquitous Language</h1>"));
         assert!(html_content.contains("<table border='1'>"));
         assert!(html_content.contains(
-            "<tr><th>Ubiquitous</th><th>Class Name</th><th>Context</th><th>Description</th></tr>"
+            "<tr><th>Ubiquitous</th><th>Class Name</th><th>Context</th><th>Description</th><th>File Path</th></tr>"
         ));
         assert!(html_content.contains("<td>ユビキタス</td>"));
         assert!(html_content.contains("<td>User</td>"));
@@ -87,6 +97,8 @@ mod tests {
         assert!(html_content.contains("<td>ユーザー情報</td>"));
         assert!(html_content.contains("<td>アイテム</td>"));
         assert!(html_content.contains("<td>アイテム情報</td>"));
+        assert!(html_content.contains("<td>src/user.rs:10</td>"));
+        assert!(html_content.contains("<td>src/item.rs:20</td>"));
 
         fs::remove_file(output_path).unwrap();
     }

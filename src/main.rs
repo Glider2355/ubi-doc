@@ -71,6 +71,8 @@ fn main() {
             ubiquitous: u.ubiquitous.clone().unwrap_or_default(),
             context: u.context.clone().unwrap_or_default(),
             description: u.description.clone().unwrap_or_default(),
+            file_path: u.file_path.clone().unwrap_or_default(),
+            line_number: u.line_number.unwrap_or(0),
         })
         .collect();
 
