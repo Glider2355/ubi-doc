@@ -1,0 +1,20 @@
+name: 'Ubiquitous Generator'
+description: 'Ubiquitous Language HTML Generator'
+author: 'Ryo Muramatsu'
+branding:
+  icon: 'book'
+  color: 'blue'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  # アクション実行時に渡す引数。ここでは --output を指定しています。
+  args:
+    - '--output'
+    - ${{ inputs.output }}
+
+inputs:
+  output:
+    description: '生成された HTML の出力先パス（リポジトリ内のパスを指定）'
+    required: false
+    default: 'sample/generated.html'
