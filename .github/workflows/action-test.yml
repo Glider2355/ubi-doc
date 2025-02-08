@@ -19,3 +19,22 @@ jobs:
 
       - name: Show generated HTML
         run: cat sample/generated.html || echo "No generated file found."
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          # Actionsが実行される際に自動的に提供されるトークンを利用します
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+          # 生成したファイルをコミットするときのメッセージ
+          commit-message: "Add generated HTML"
+
+          # Pull Requestを作るための一時的な作業用ブランチ名
+          branch: "generated-html-${{ github.run_id }}"
+
+          # Pull Requestのタイトルや本文
+          title: "Add generated HTML"
+          body: "Auto-generated PR with the new HTML."
+
+          # mainブランチに対してPull Requestを作る場合
+          base: "main"
