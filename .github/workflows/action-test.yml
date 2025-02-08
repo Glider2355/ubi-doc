@@ -1,4 +1,4 @@
-name: Test Ubiquitous Generator Action
+name: Test Ubi Doc Action
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run Ubiquitous Generator Action
+      - name: Run Ubi Doc Action
         uses: ./
         with:
           output: 'sample/generated.html'

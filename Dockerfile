@@ -16,12 +16,12 @@
     FROM rust:1.83
     
     # ビルド済みバイナリを /usr/local/bin に配置する
-    COPY --from=builder /usr/src/myapp/target/release/ubiquitous-generator /usr/local/bin/ubiquitous-generator
+    COPY --from=builder /usr/src/myapp/target/release/ubi-doc /usr/local/bin/ubi-doc
     
     # GitHub Actions のランナーではリポジトリが /github/workspace にマウントされるため、
     # ワークスペースとしてそのディレクトリを指定する
     WORKDIR /github/workspace
     
     # コンテナ起動時にビルド済みバイナリを実行する
-    ENTRYPOINT ["/usr/local/bin/ubiquitous-generator"]
+    ENTRYPOINT ["/usr/local/bin/ubi-doc"]
     

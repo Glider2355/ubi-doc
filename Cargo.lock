@@ -334,7 +334,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ubiquitous-generator"
+name = "ubi-doc"
 version = "0.1.0"
 dependencies = [
  "clap",

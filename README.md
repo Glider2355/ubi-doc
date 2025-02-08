@@ -1,4 +1,4 @@
-# Ubiquitous Generator
+# Ubi Doc
 todo: 概要を書く
 
 ## Usage
@@ -7,7 +7,7 @@ todo: 使い方を書く
 ### Basic configuration
 
 ```yaml
-name: Ubiquitous Generator
+name: Ubi Doc
 on:
   workflow_dispatch:
   pull_request:
@@ -17,7 +17,7 @@ on:
       - 'releases/*'
 
 jobs:
-  ubiquitous-generator:
+  ubi-doc:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -26,8 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Ubiquitous Generator
-        uses: Glider2355/ubiquitous-generator@v1
+      - name: Ubi Doc
+        uses: Glider2355/ubi-doc@v1
         with:
           output: 'docs/generated.html'  # ouput HTML file path
 ```
