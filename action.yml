@@ -5,19 +5,28 @@ branding:
   icon: 'book'
   color: 'blue'
 
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  env:
-    GITHUB_REPOSITORY: ${{ env.GITHUB_REPOSITORY }}
-    GITHUB_REF_NAME: ${{ env.GITHUB_REF_NAME }}
-  # アクション実行時に渡す引数。ここでは --output を指定しています。
-  args:
-    - '--output'
-    - ${{ inputs.output }}
-
 inputs:
   output:
     description: '生成された HTML の出力先パス（リポジトリ内のパスを指定）'
     required: false
     default: 'sample/generated.html'
+  repo:
+    description: 'GitHubリポジトリ (owner/repo)'
+    required: false
+    default: 'owner/repo'
+  branch:
+    description: 'ブランチ名 (例: main)'
+    required: false
+    default: 'main'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+
+  env:
+    GITHUB_REPOSITORY: ${{ inputs.repo }}
+    GITHUB_REF_NAME: ${{ inputs.branch }}
+
+  args:
+    - '--output'
+    - ${{ inputs.output }}
