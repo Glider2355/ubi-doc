@@ -31,38 +31,24 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 1. Gitユーザー情報を設定
+          # 1. Git のユーザー設定
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # 2. 新しいブランチを作成してチェックアウト
-          git checkout -b auto-generated-html
+          # 2. ユニークなブランチ名を作成: auto-generated-html/<run_id>
+          BRANCH_NAME="auto-generated-html/${{ github.run_id }}"
+          git checkout -b "$BRANCH_NAME"
 
-          # 3. 変更ファイルをステージ＆コミット
+          # 3. 変更をコミット
           git add sample/generated.html
           git commit -m $'chore: Add generated HTML\n\nAuto-commit by GitHub Actions.'
 
-          # 4. 作成したブランチをリモートにPush
-          git push origin auto-generated-html
+          # 4. ブランチをリモートにPush
+          git push origin "$BRANCH_NAME"
 
-          # 5. ghコマンドでPull Requestを作成
+          # 5. Pull Requestを作成
           gh pr create \
             --base main \
-            --head auto-generated-html \
+            --head "$BRANCH_NAME" \
             --title "Add generated HTML via GitHub Actions" \
             --body "このPull Requestでは、最新のHTMLファイルを自動生成・追加しました。"
-
-      # Pull Request番号やURLを取得・出力したい場合（オプション）
-      - name: Check PR info
-        if: always()  # 成功・失敗問わず実行したいならalways()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # head=auto-generated-html のPRを検索し、JSON形式で取得
-          PR_INFO=$(gh pr list --head auto-generated-html --limit 1 --json number,url)
-          # jqを使って番号とURLをパース
-          PR_NUMBER=$(echo "$PR_INFO" | jq '.[0].number')
-          PR_URL=$(echo "$PR_INFO" | jq -r '.[0].url')
-
-          echo "Pull Request Number - $PR_NUMBER"
-          echo "Pull Request URL - $PR_URL"
