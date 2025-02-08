@@ -9,7 +9,7 @@ jobs:
   test-action:
     runs-on: ubuntu-latest
 
-    # GITHUB_TOKEN を使ってPull Requestを作成するための権限を設定
+    # GITHUB_TOKEN を使ってPull Requestを作成・Pushするための権限を設定
     permissions:
       contents: write
       pull-requests: write
@@ -26,23 +26,43 @@ jobs:
       - name: Show generated HTML
         run: cat sample/generated.html || echo "No generated file found."
 
-      # create-pull-requestアクションを使ってPull Requestを作成
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v7
-        with:
-          commit-message: |
-            chore: Add generated HTML
-
-            Auto-commit by GitHub Actions.
-          title: "Add generated HTML via GitHub Actions"
-          body: |
-            このPull Requestでは、最新のHTMLファイルを自動生成・追加しました。
-          branch: "auto-generated-html"
-
-      # Pull Request番号など出力を確認（オプション）
-      - name: Check outputs
-        if: ${{ steps.cpr.outputs.pull-request-number }}
+      - name: Create Pull Request (via gh CLI)
+        # GH CLIはデフォルトで GH_TOKEN 環境変数を参照するため、GITHUB_TOKEN を割り当てます
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+          # 1. Gitユーザー情報を設定
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 2. 新しいブランチを作成してチェックアウト
+          git checkout -b auto-generated-html
+
+          # 3. 変更ファイルをステージ＆コミット
+          git add sample/generated.html
+          git commit -m $'chore: Add generated HTML\n\nAuto-commit by GitHub Actions.'
+
+          # 4. 作成したブランチをリモートにPush
+          git push origin auto-generated-html
+
+          # 5. ghコマンドでPull Requestを作成
+          gh pr create \
+            --base main \
+            --head auto-generated-html \
+            --title "Add generated HTML via GitHub Actions" \
+            --body "このPull Requestでは、最新のHTMLファイルを自動生成・追加しました。"
+
+      # Pull Request番号やURLを取得・出力したい場合（オプション）
+      - name: Check PR info
+        if: always()  # 成功・失敗問わず実行したいならalways()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # head=auto-generated-html のPRを検索し、JSON形式で取得
+          PR_INFO=$(gh pr list --head auto-generated-html --limit 1 --json number,url)
+          # jqを使って番号とURLをパース
+          PR_NUMBER=$(echo "$PR_INFO" | jq '.[0].number')
+          PR_URL=$(echo "$PR_INFO" | jq -r '.[0].url')
+
+          echo "Pull Request Number - $PR_NUMBER"
+          echo "Pull Request URL - $PR_URL"
