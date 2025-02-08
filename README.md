@@ -3,6 +3,7 @@ todo: 概要を書く
 
 ## Usage
 todo: 使い方を書く
+- PR作成権限を付ける必要がある
 
 ### Basic configuration
 

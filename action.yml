@@ -8,6 +8,9 @@ branding:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  env:
+    GITHUB_REPOSITORY: ${{ env.GITHUB_REPOSITORY }}
+    GITHUB_REF_NAME: ${{ env.GITHUB_REF_NAME }}
   # アクション実行時に渡す引数。ここでは --output を指定しています。
   args:
     - '--output'
