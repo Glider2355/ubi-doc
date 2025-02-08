@@ -1,3 +1,8 @@
-- [ ] RustのDockerコンテナを作成する
-- [ ] コマンドライン実行できるようにする
-- [ ] actionsからRustを実行する
+- [x] RustのDockerコンテナを作成する
+- [x] コマンドライン実行できるようにする
+- [x] actionsからRustを実行する
+- [x] GitHubのURLを出力する
+- [ ] envはmain.rsから渡す
+- [ ] teraでHTMLテンプレートを作成する
+- [ ] HTMLのデザインをいい感じにする
+- [ ] READMEを書く
