@@ -20,6 +20,9 @@ jobs:
 
       - name: Run Ubi Doc Action
         uses: ./
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
         with:
           output: 'sample/generated.html'
 
