@@ -58,7 +58,7 @@ jobs:
           git checkout -b "$BRANCH_NAME"
 
           # 3. 変更をコミット
-          git add sample/generated.html
+          git add sample/ubi-doc
           git commit -m $'chore: Add generated HTML\n\nAuto-commit by GitHub Actions.'
 
           # 4. ブランチをリモートにPush
