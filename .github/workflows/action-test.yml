@@ -36,6 +36,7 @@ jobs:
             echo "::set-output name=difffound::false"
           else
             echo "Differences found, continuing..."
+            echo "::set-output name=difffound::true"
           fi
 
       - name: Close existing auto-generated HTML PRs
