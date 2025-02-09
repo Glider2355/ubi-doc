@@ -1,8 +1,13 @@
+use serde::Serialize;
+
+#[derive(Serialize)]
 pub struct UbiquitousRow {
     pub class_name: String,
     pub ubiquitous: String,
     pub context: String,
     pub description: String,
+    pub file_path: String,
+    pub line_number: usize,
     pub github_url: String,
 }
 
@@ -13,6 +18,8 @@ impl UbiquitousRow {
             ubiquitous: "".to_string(),
             context: "".to_string(),
             description: "".to_string(),
+            file_path: "".to_string(),
+            line_number: 0,
             github_url: "".to_string(),
         }
     }
@@ -48,6 +55,8 @@ impl UbiquitousRow {
             "https://github.com/{}/blob/{}/{}#L{}",
             repo, branch, file_path, line_number
         );
+        self.file_path = file_path;
+        self.line_number = line_number;
         self
     }
 }

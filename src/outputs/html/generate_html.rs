@@ -24,7 +24,7 @@ struct TplItem {
     description: String,
     file_path: String,
     line_number: usize,
-    url: String,
+    github_url: String,
 }
 
 pub fn generate_html(
@@ -59,7 +59,7 @@ pub fn generate_html(
                 description: u.description,
                 file_path: u.file_path,
                 line_number: u.line_number,
-                url: url_link,
+                github_url: url_link,
             }
         })
         .collect();
@@ -70,7 +70,7 @@ pub fn generate_html(
     context.insert("items", &items);
 
     // 4. テンプレートファイル "ubiquitous.html" をレンダリング
-    let rendered_html = tera
+    let rendered_html: String = tera
         .render("ubiquitous.html", &context)
         .expect("Failed to render template");
 

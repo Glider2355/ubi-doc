@@ -41,7 +41,7 @@
         <td>{{ item.description }}</td>
         <td>
           <!-- URLはsafeフィルタを使ってHTMLエスケープを無効化 -->
-          <a href="{{ item.url | safe }}">
+          <a href="{{ item.github_url | safe }}">
             {{ item.file_path | safe }}:{{ item.line_number }}
           </a>
         </td>
