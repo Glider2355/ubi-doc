@@ -14,7 +14,7 @@ struct Args {
     input: String,
 
     /// 出力HTMLファイルのパス
-    #[arg(short, long, default_value = "tests/fixtures/output.html")]
+    #[arg(short, long, default_value = "tests/fixtures")]
     output: String,
 }
 

@@ -42,7 +42,7 @@ jobs:
             | jq -r '.[].number' \
             | while read pr; do
                 echo "Closing PR #$pr"
-                gh pr close "$pr"
+                gh pr close "$pr" --delete-branch
               done
 
       - name: Create Pull Request (via gh CLI)
