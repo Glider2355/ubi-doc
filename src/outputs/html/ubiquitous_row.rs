@@ -51,9 +51,14 @@ impl UbiquitousRow {
         file_path: String,
         line_number: usize,
     ) -> Self {
+        let normalized_path = file_path
+            .replace("\\", "/")
+            .trim_start_matches("./")
+            .to_string();
+
         self.github_url = format!(
             "https://github.com/{}/blob/{}/{}#L{}",
-            repo, branch, file_path, line_number
+            repo, branch, normalized_path, line_number
         );
         self.file_path = file_path;
         self.line_number = line_number;
