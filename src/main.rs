@@ -1,7 +1,7 @@
 use clap::Parser;
+use outputs::html::{generate_html::generate_html, ubiquitous_row::UbiquitousRow};
 use std::path::Path;
 
-use outputs::html::generate_html::{generate_html, GenerateHtmlParam};
 use parser::get_ubiquitous_list::get_ubiquitous_list;
 mod outputs;
 mod parser;
@@ -69,23 +69,27 @@ fn main() {
     // 出力ファイルのパスを取得
     let output_path = Path::new(&args.output);
 
-    // HTML 出力用のパラメータに変換
-    let mapped_list: Vec<GenerateHtmlParam> = ubiquitous_list
-        .into_iter()
-        .map(|u| GenerateHtmlParam {
-            class_name: u.class_name.clone().unwrap_or_default(),
-            ubiquitous: u.ubiquitous.clone().unwrap_or_default(),
-            context: u.context.clone().unwrap_or_default(),
-            description: u.description.clone().unwrap_or_default(),
-            file_path: u.file_path.clone().unwrap_or_default(),
-            line_number: u.line_number.unwrap_or(0),
-        })
-        .collect();
-
     let repo: String =
         std::env::var("GITHUB_REPOSITORY").unwrap_or_else(|_| "owner/repo".to_string());
     let branch: String = std::env::var("GITHUB_REF_NAME").unwrap_or_else(|_| "main".to_string());
 
+    let ubiquitous_rows: Vec<UbiquitousRow> = ubiquitous_list
+        .iter()
+        .map(|ubiquitous| {
+            UbiquitousRow::new()
+                .set_class_name(ubiquitous.class_name.clone().unwrap_or_default())
+                .set_ubiquitous(ubiquitous.ubiquitous.clone().unwrap_or_default())
+                .set_context(ubiquitous.context.clone().unwrap_or_default())
+                .set_description(ubiquitous.description.clone().unwrap_or_default())
+                .set_github_url(
+                    repo.clone(),
+                    branch.clone(),
+                    ubiquitous.file_path.clone().unwrap_or_default(),
+                    ubiquitous.line_number.unwrap_or_default(),
+                )
+        })
+        .collect();
+
     // HTMLファイルとして出力
-    generate_html(mapped_list, &repo, &branch, output_path);
+    generate_html(ubiquitous_rows, output_path);
 }
