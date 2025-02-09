@@ -29,7 +29,7 @@ jobs:
         run: |
           echo "Checking for differences in docs/ubi-doc compared to origin/main..."
           git fetch origin main
-          if git diff --quiet origin/main -- docs/ubi-doc; then
+          if git diff --quiet --no-index origin/main -- docs/ubi-doc; then
             echo "No differences found in docs/ubi-doc. Exiting."
             echo "::set-output name=difffound::false"
           else
