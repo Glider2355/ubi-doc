@@ -20,17 +20,17 @@ jobs:
       - name: Run Ubi Doc Action
         uses: ./
         with:
-          output: 'sample'
+          output: 'docs'
           repo: ${{ github.repository }}
           branch: ${{ github.ref_name }}
 
       - name: Check for differences in ubi-doc directory
         id: diffcheck
         run: |
-          echo "Checking for differences in sample/ubi-doc compared to origin/main..."
+          echo "Checking for differences in docs/ubi-doc compared to origin/main..."
           git fetch origin main
-          if git diff --quiet origin/main -- sample/ubi-doc; then
-            echo "No differences found in sample/ubi-doc. Exiting."
+          if git diff --quiet origin/main -- docs/ubi-doc; then
+            echo "No differences found in docs/ubi-doc. Exiting."
             echo "::set-output name=difffound::false"
           else
             echo "Differences found, continuing..."
@@ -68,7 +68,7 @@ jobs:
           git checkout -b "$BRANCH_NAME"
 
           # 3. 変更をコミット
-          git add sample/ubi-doc
+          git add docs/ubi-doc
           git commit -m $'chore: Add generated HTML\n\nAuto-commit by GitHub Actions.'
 
           # 4. ブランチをリモートにPush

@@ -124,7 +124,7 @@ mod tests {
         // 一時ディレクトリを作成
         let dir = tempdir()?;
         // ダミーファイルを作成 (.rs ファイル)
-        let file_path = dir.path().join("sample.rs");
+        let file_path = dir.path().join("docs.rs");
         let mut file = File::create(&file_path)?;
         writeln!(file, "fn sample() {{ println!(\"file_path test\"); }}")?;
 
