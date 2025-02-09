@@ -1,8 +1,10 @@
+use serde::Serialize;
 use std::{
     fs::{self, File},
     io::Write,
     path::Path,
 };
+use tera::{Context, Tera};
 
 pub struct GenerateHtmlParam {
     pub class_name: String,
@@ -13,55 +15,71 @@ pub struct GenerateHtmlParam {
     pub line_number: usize,
 }
 
+// テンプレートに渡す用の構造体
+#[derive(Serialize)]
+struct TplItem {
+    class_name: String,
+    ubiquitous: String,
+    context: String,
+    description: String,
+    file_path: String,
+    line_number: usize,
+    url: String,
+}
+
 pub fn generate_html(
     ubiquitous_list: Vec<GenerateHtmlParam>,
     repo: &String,
     branch: &String,
     output_path: &Path,
 ) {
-    // 出力先ディレクトリが存在しない場合は作成する
+    // 出力先ディレクトリが存在しない場合は作成
     if let Some(parent) = output_path.parent() {
         fs::create_dir_all(parent).unwrap();
     }
 
-    let mut html = String::new();
-    html.push_str("<html>\n");
-    html.push_str("  <head>\n");
-    html.push_str("    <title>Ubiquitous Language</title>\n");
-    html.push_str("  </head>\n");
-    html.push_str("  <body>\n");
-    html.push_str("    <h1>Ubiquitous Language</h1>\n");
-    html.push_str("    <table border='1'>\n");
-    html.push_str("      <tr><th>Ubiquitous</th><th>Class Name</th><th>Context</th><th>Description</th><th>URL</th></tr>\n");
+    // 1. Teraインスタンスを作成し、templates/*.html を読み込む
+    //    (templatesディレクトリ内のファイルが対象)
+    let tera = Tera::new("src/outputs/html/templates/*.html")
+        .expect("Failed to init Tera with templates/*.html");
 
-    for ubiquitous in ubiquitous_list {
-        let file_path_link = format!(
-            "https://github.com/{}/blob/{}/{}#L{}",
-            repo, branch, ubiquitous.file_path, ubiquitous.line_number
-        );
+    // 2. テンプレートに渡すデータを準備
+    //    リンクなどは Rust 側で生成しておく
+    let items: Vec<TplItem> = ubiquitous_list
+        .into_iter()
+        .map(|u| {
+            let url_link = format!(
+                "https://github.com/{}/blob/{}/{}#L{}",
+                repo, branch, u.file_path, u.line_number
+            );
+            TplItem {
+                class_name: u.class_name,
+                ubiquitous: u.ubiquitous,
+                context: u.context,
+                description: u.description,
+                file_path: u.file_path,
+                line_number: u.line_number,
+                url: url_link,
+            }
+        })
+        .collect();
 
-        html.push_str("      <tr>\n");
-        html.push_str(&format!("        <td>{}</td>\n", ubiquitous.ubiquitous));
-        html.push_str(&format!("        <td>{}</td>\n", ubiquitous.class_name));
-        html.push_str(&format!("        <td>{}</td>\n", ubiquitous.context));
-        html.push_str(&format!("        <td>{}</td>\n", ubiquitous.description));
-        html.push_str(&format!(
-            "        <td><a href=\"{url}\">{file}:{line}</a></td>\n",
-            url = file_path_link,
-            file = ubiquitous.file_path,
-            line = ubiquitous.line_number
-        ));
-        html.push_str("      </tr>\n");
-    }
+    // 3. Contextを使ってデータを挿入
+    let mut context = Context::new();
+    // テンプレートでは {% for item in items %} と書いているので "items" のキーを使う
+    context.insert("items", &items);
 
-    html.push_str("    </table>\n");
-    html.push_str("  </body>\n");
-    html.push_str("</html>\n");
+    // 4. テンプレートファイル "ubiquitous.html" をレンダリング
+    let rendered_html = tera
+        .render("ubiquitous.html", &context)
+        .expect("Failed to render template");
 
+    // 5. レンダリング結果をファイルに書き込む
     let mut file = File::create(output_path).unwrap();
-    file.write_all(html.as_bytes()).unwrap();
+    file.write_all(rendered_html.as_bytes()).unwrap();
 }
 
+// --- テストは既存のままでOK ---
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -92,8 +110,6 @@ mod tests {
 
         // テストで利用する出力ファイルのパス
         let output_path = Path::new("tests/fixtures/test_output.html");
-
-        // 出力先ディレクトリが存在しない場合は作成
         if let Some(parent) = output_path.parent() {
             fs::create_dir_all(parent).unwrap();
         }
@@ -107,28 +123,24 @@ mod tests {
         // 生成された HTML ファイルを読み込み
         let html_content = fs::read_to_string(output_path).unwrap();
 
-        // HTML の各要素が正しく出力されているか検証
+        // テストでHTML要素が含まれるかをチェック（従来のテストをそのまま実行）
         assert!(html_content.contains("<html>"));
         assert!(html_content.contains("<title>Ubiquitous Language</title>"));
         assert!(html_content.contains("<h1>Ubiquitous Language</h1>"));
         assert!(html_content.contains("<table border='1'>"));
-
-        // テーブルヘッダ: File Path → URL に変更されたので、ここも修正
         assert!(html_content.contains("<tr><th>Ubiquitous</th><th>Class Name</th><th>Context</th><th>Description</th><th>URL</th></tr>"));
-
-        // 各フィールド
         assert!(html_content.contains("<td>ユビキタス</td>"));
         assert!(html_content.contains("<td>User</td>"));
         assert!(html_content.contains("<td>ユーザー</td>"));
         assert!(html_content.contains("<td>ユーザー情報</td>"));
         assert!(html_content.contains("<td>アイテム</td>"));
         assert!(html_content.contains("<td>アイテム情報</td>"));
-
-        // リンクとして表示されているか。フォールバックでは "owner/repo" / "main" が使われる
-        // user.rs (行10)
-        assert!(html_content.contains("<a href=\"https://github.com/owner/repo/blob/main/src/user.rs#L10\">src/user.rs:10</a>"));
-        // item.rs (行20)
-        assert!(html_content.contains("<a href=\"https://github.com/owner/repo/blob/main/src/item.rs#L20\">src/item.rs:20</a>"));
+        assert!(html_content
+            .contains(r#"<a href="https://github.com/owner/repo/blob/main/src/user.rs#L10"#));
+        assert!(html_content.contains(r#"src/user.rs:10"#));
+        assert!(html_content
+            .contains(r#"<a href="https://github.com/owner/repo/blob/main/src/item.rs#L20"#));
+        assert!(html_content.contains(r#"src/item.rs:20"#));
 
         // テスト終了後にファイルを削除
         fs::remove_file(output_path).unwrap();

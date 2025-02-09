@@ -9,3 +9,6 @@ tree-sitter-php = "0.23.11"
 walkdir = "2"
 tempfile = "3"
 clap = { version = "4.0", features = ["derive"] }
+tera = "1.19"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
