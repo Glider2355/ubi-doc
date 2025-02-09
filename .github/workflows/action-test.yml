@@ -25,17 +25,19 @@ jobs:
           branch: ${{ github.ref_name }}
 
       - name: Check for differences in ubi-doc directory
+        id: diffcheck
         run: |
           echo "Checking for differences in sample/ubi-doc compared to origin/main..."
           git fetch origin main
           if git diff --quiet origin/main -- sample/ubi-doc; then
             echo "No differences found in sample/ubi-doc. Exiting."
-            exit 0
+            echo "::set-output name=difffound::false"
           else
             echo "Differences found, continuing..."
           fi
 
       - name: Close existing auto-generated HTML PRs
+        if: steps.diffcheck.outputs.difffound == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -53,6 +55,7 @@ jobs:
               done
 
       - name: Create Pull Request (via gh CLI)
+        if: steps.diffcheck.outputs.difffound == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
