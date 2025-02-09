@@ -3,6 +3,8 @@
 - [x] actionsからRustを実行する
 - [x] GitHubのURLを出力する
 - [x] envはmain.rsから渡す
+- [ ] 古いPRを削除する
 - [ ] teraでHTMLテンプレートを作成する
 - [ ] HTMLのデザインをいい感じにする
 - [ ] READMEを書く
+- [ ] 並列化する

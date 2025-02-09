@@ -9,7 +9,6 @@ jobs:
   test-action:
     runs-on: ubuntu-latest
 
-    # GITHUB_TOKEN を使ってPull Requestを作成・Pushするための権限を設定
     permissions:
       contents: write
       pull-requests: write
@@ -28,8 +27,25 @@ jobs:
       - name: Show generated HTML
         run: cat sample/generated.html || echo "No generated file found."
 
+      # ここで過去の auto-generated-html ブランチから作成されたPRをすべてクローズする
+      - name: Close existing auto-generated HTML PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Closing existing auto-generated HTML PRs..."
+          # 過去の PR をリストアップし、番号を抽出して繰り返し閉じる
+          gh pr list \
+            --search "head:auto-generated-html" \
+            --state open \
+            --json number \
+            --limit 100 \
+            | jq -r '.[].number' \
+            | while read pr; do
+                echo "Closing PR #$pr"
+                gh pr close "$pr"
+              done
+
       - name: Create Pull Request (via gh CLI)
-        # GH CLIはデフォルトで GH_TOKEN 環境変数を参照するため、GITHUB_TOKEN を割り当てます
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
