@@ -31,7 +31,7 @@ jobs:
           ls -la docs/ubi-doc
           git fetch origin main
           git add docs/ubi-doc
-          if git diff --quiet origin/main -- docs/ubi-doc; then
+          if git diff --cached --quiet origin/main -- docs/ubi-doc; then
             echo "No differences found in docs/ubi-doc. Exiting."
             echo "::set-output name=difffound::false"
           else
