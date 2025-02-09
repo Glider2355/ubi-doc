@@ -10,7 +10,7 @@ mod parser;
 #[command(author, version, about = "ユビキタス言語表作成ツール", long_about = None)]
 struct Args {
     /// 入力ディレクトリのパス
-    #[arg(short, long, default_value = ".")]
+    #[arg(short, long, default_value = "tests/fixtures")]
     input: String,
 
     /// 出力HTMLファイルのパス

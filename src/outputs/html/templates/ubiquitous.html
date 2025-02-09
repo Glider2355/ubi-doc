@@ -1,11 +1,38 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Ubiquitous Language</title>
-  </head>
-  <body>
-    <h1>Ubiquitous Language</h1>
-    <table border='1'>
-      <tr><th>Ubiquitous</th><th>Class Name</th><th>Context</th><th>Description</th><th>URL</th></tr>
+<head>
+  <meta charset="UTF-8">
+  <title>Ubiquitous Language</title>
+  <!-- 外部CSSを読み込む -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <h1>Ubiquitous Language</h1>
+
+  <div class="filter-area">
+    <label for="keyword-input">検索:</label>
+    <input type="search" id="keyword-input" placeholder="キーワード..." />
+  
+    <label for="context-select">Context:</label>
+    <select id="context-select">
+      <option value="">すべて</option>
+      <option value="context">context</option>
+      <option value="another">another</option>
+      <!-- 必要に応じて追加 -->
+    </select>
+  </div>
+
+  <table id="ubitable">
+    <thead>
+      <tr>
+        <th>Ubiquitous</th>
+        <th>Class Name</th>
+        <th>Context</th>
+        <th>Description</th>
+        <th>URL</th>
+      </tr>
+    </thead>
+    <tbody>
       {% for item in items %}
       <tr>
         <td>{{ item.ubiquitous }}</td>
@@ -13,12 +40,17 @@
         <td>{{ item.context }}</td>
         <td>{{ item.description }}</td>
         <td>
+          <!-- URLはsafeフィルタを使ってHTMLエスケープを無効化 -->
           <a href="{{ item.url | safe }}">
             {{ item.file_path | safe }}:{{ item.line_number }}
           </a>
         </td>
       </tr>
       {% endfor %}
-    </table>
-  </body>
+    </tbody>
+  </table>
+
+  <!-- 外部JavaScriptを読み込む -->
+  <script src="./script.js"></script>
+</body>
 </html>

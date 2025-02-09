@@ -28,5 +28,7 @@ runs:
     GITHUB_REF_NAME: ${{ inputs.branch }}
 
   args:
+    - '--input'
+    - "."
     - '--output'
     - ${{ inputs.output }}
