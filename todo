@@ -11,8 +11,8 @@
   - [x] js, css, レンダリングされたHTMLを出力する
 - [x] sampleディレクトリを作成する
 - [x] sampleをGitHub pagesで公開する
+- [x] ユビキタス言語をsortする
 - [ ] HTMLのデザインをいい感じにする
-- [ ] ユビキタス言語をsortする
 - [ ] CIを整備する
 - [ ] READMEを書く
 - [ ] 並列化する
