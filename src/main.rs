@@ -70,7 +70,7 @@ fn main() {
     let output_path = Path::new(&args.output);
 
     let repo: String =
-        std::env::var("GITHUB_REPOSITORY").unwrap_or_else(|_| "owner/repo".to_string());
+        std::env::var("GITHUB_REPOSITORY").unwrap_or_else(|_| "Glider2355/ubi-doc".to_string());
     let branch: String = std::env::var("GITHUB_REF_NAME").unwrap_or_else(|_| "main".to_string());
 
     let ubiquitous_rows: Vec<UbiquitousRow> = ubiquitous_list
