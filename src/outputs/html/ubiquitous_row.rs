@@ -60,7 +60,7 @@ impl UbiquitousRow {
             "https://github.com/{}/blob/{}/{}#L{}",
             repo, branch, normalized_path, line_number
         );
-        self.file_path = file_path;
+        self.file_path = normalized_path;
         self.line_number = line_number;
         self
     }
