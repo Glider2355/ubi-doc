@@ -20,7 +20,7 @@ jobs:
       - name: Run Ubi Doc Action
         uses: ./
         with:
-          output: 'sample/generated.html'
+          output: 'sample'
           repo: ${{ github.repository }}
           branch: ${{ github.ref_name }}
 
