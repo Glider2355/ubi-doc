@@ -1,10 +1,10 @@
 use tera::{Context, Tera};
 
-use super::ubiquitous_row::UbiquitousRow;
+use super::ubiquitous_rows::UbiquitousRows;
 
-pub fn render_html(rows: Vec<UbiquitousRow>) -> String {
+pub fn render_html(rows: UbiquitousRows) -> String {
     let mut context = Context::new();
-    context.insert("items", &rows);
+    context.insert("items", &rows.rows);
 
     let tera = Tera::new("src/outputs/html/templates/*.html")
         .expect("Failed to init Tera with templates/*.html");
@@ -15,22 +15,8 @@ pub fn render_html(rows: Vec<UbiquitousRow>) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{render_html, UbiquitousRow};
-
-    #[test]
-    fn test_set_github_url() {
-        let repo = "owner/repo".to_string();
-        let branch = "main".to_string();
-        let file_path = "src/lib.rs".to_string();
-        let line_number = 42;
-
-        let row = UbiquitousRow::new().set_github_url(repo, branch, file_path, line_number);
-
-        assert_eq!(
-            row.github_url,
-            "https://github.com/owner/repo/blob/main/src/lib.rs#L42"
-        );
-    }
+    use super::{render_html, UbiquitousRows};
+    use crate::outputs::html::ubiquitous_row::UbiquitousRow;
 
     #[test]
     fn test_render_html() {
@@ -59,7 +45,9 @@ mod tests {
                 20,
             );
 
-        let rows = vec![row1, row2];
+        let rows = UbiquitousRows {
+            rows: vec![row1, row2],
+        };
 
         // render_htmlを呼び出し、返ってきたHTML文字列を検証
         let output = render_html(rows);

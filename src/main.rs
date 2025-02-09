@@ -1,5 +1,7 @@
 use clap::Parser;
-use outputs::html::{generate_html::generate_html, ubiquitous_row::UbiquitousRow};
+use outputs::html::{
+    generate_html::generate_html, ubiquitous_row::UbiquitousRow, ubiquitous_rows::UbiquitousRows,
+};
 use std::path::Path;
 
 use parser::get_ubiquitous_list::get_ubiquitous_list;
@@ -73,22 +75,21 @@ fn main() {
         std::env::var("GITHUB_REPOSITORY").unwrap_or_else(|_| "Glider2355/ubi-doc".to_string());
     let branch: String = std::env::var("GITHUB_REF_NAME").unwrap_or_else(|_| "main".to_string());
 
-    let ubiquitous_rows: Vec<UbiquitousRow> = ubiquitous_list
-        .iter()
-        .map(|ubiquitous| {
-            UbiquitousRow::new()
-                .set_class_name(ubiquitous.class_name.clone().unwrap_or_default())
-                .set_ubiquitous(ubiquitous.ubiquitous.clone().unwrap_or_default())
-                .set_context(ubiquitous.context.clone().unwrap_or_default())
-                .set_description(ubiquitous.description.clone().unwrap_or_default())
-                .set_github_url(
-                    repo.clone(),
-                    branch.clone(),
-                    ubiquitous.file_path.clone().unwrap_or_default(),
-                    ubiquitous.line_number.unwrap_or_default(),
-                )
-        })
-        .collect();
+    let mut ubiquitous_rows = UbiquitousRows::new();
+    for ubiquitous in ubiquitous_list.iter() {
+        let row = UbiquitousRow::new()
+            .set_class_name(ubiquitous.class_name.clone().unwrap_or_default())
+            .set_ubiquitous(ubiquitous.ubiquitous.clone().unwrap_or_default())
+            .set_context(ubiquitous.context.clone().unwrap_or_default())
+            .set_description(ubiquitous.description.clone().unwrap_or_default())
+            .set_github_url(
+                repo.clone(),
+                branch.clone(),
+                ubiquitous.file_path.clone().unwrap_or_default(),
+                ubiquitous.line_number.unwrap_or_default(),
+            );
+        ubiquitous_rows.add(row);
+    }
 
     // HTMLファイルとして出力
     generate_html(ubiquitous_rows, output_path);
