@@ -28,6 +28,7 @@ jobs:
         id: diffcheck
         run: |
           echo "Checking for differences in docs/ubi-doc compared to origin/main..."
+          ls -la docs/ubi-doc
           git fetch origin main
           git add docs/ubi-doc
           if git diff --quiet origin/main -- docs/ubi-doc; then
