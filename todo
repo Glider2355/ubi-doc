@@ -10,7 +10,7 @@
   - [x] HTMLのレンダリングをレンダリングする
   - [x] js, css, レンダリングされたHTMLを出力する
 - [x] sampleディレクトリを作成する
-- [ ] sampleをGitHub pagesで公開する
+- [x] sampleをGitHub pagesで公開する
 - [ ] HTMLのデザインをいい感じにする
 - [ ] ユビキタス言語をsortする
 - [ ] CIを整備する
