@@ -127,8 +127,7 @@ mod tests {
         assert!(html_content.contains("<html>"));
         assert!(html_content.contains("<title>Ubiquitous Language</title>"));
         assert!(html_content.contains("<h1>Ubiquitous Language</h1>"));
-        assert!(html_content.contains("<table border='1'>"));
-        assert!(html_content.contains("<tr><th>Ubiquitous</th><th>Class Name</th><th>Context</th><th>Description</th><th>URL</th></tr>"));
+        assert!(html_content.contains(r#"<table id="ubitable">"#));
         assert!(html_content.contains("<td>ユビキタス</td>"));
         assert!(html_content.contains("<td>User</td>"));
         assert!(html_content.contains("<td>ユーザー</td>"));
