@@ -10,7 +10,7 @@ pub fn output_assets(rendered_html: &String, output_path: &Path) {
     fs::create_dir_all(&assets_dir).unwrap();
 
     // レンダリング結果をHTMLファイルに書き込む
-    let mut file = File::create(assets_dir.join("ubiquitous.html")).unwrap();
+    let mut file = File::create(assets_dir.join("index.html")).unwrap();
     file.write_all(rendered_html.as_bytes()).unwrap();
 
     // script.js / style.css も同フォルダにコピー
@@ -51,7 +51,7 @@ mod tests {
 
         // HTMLは (output_path)/ubi-doc/ubiquitous.html に作られる
         let ubi_dir = output_path.join("ubi-doc");
-        let html_file = ubi_dir.join("ubiquitous.html");
+        let html_file = ubi_dir.join("index.html");
         assert!(html_file.exists(), "ubiquitous.html should exist");
         let content = fs::read_to_string(&html_file).unwrap();
         assert_eq!(content, dummy_html);
