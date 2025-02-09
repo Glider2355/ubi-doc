@@ -24,10 +24,17 @@ jobs:
           repo: ${{ github.repository }}
           branch: ${{ github.ref_name }}
 
-      - name: Show generated HTML
-        run: cat sample/generated.html || echo "No generated file found."
+      - name: Check for differences in ubi-doc directory
+        run: |
+          echo "Checking for differences in sample/ubi-doc compared to origin/main..."
+          git fetch origin main
+          if git diff --quiet origin/main -- sample/ubi-doc; then
+            echo "No differences found in sample/ubi-doc. Exiting."
+            exit 0
+          else
+            echo "Differences found, continuing..."
+          fi
 
-      # ここで過去の auto-generated-html ブランチから作成されたPRをすべてクローズする
       - name: Close existing auto-generated HTML PRs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
