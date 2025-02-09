@@ -82,6 +82,10 @@ fn main() {
         })
         .collect();
 
+    let repo: String =
+        std::env::var("GITHUB_REPOSITORY").unwrap_or_else(|_| "owner/repo".to_string());
+    let branch: String = std::env::var("GITHUB_REF_NAME").unwrap_or_else(|_| "main".to_string());
+
     // HTMLファイルとして出力
-    generate_html(mapped_list, output_path);
+    generate_html(mapped_list, &repo, &branch, output_path);
 }

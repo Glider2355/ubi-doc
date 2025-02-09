@@ -13,14 +13,16 @@ pub struct GenerateHtmlParam {
     pub line_number: usize,
 }
 
-pub fn generate_html(ubiquitous_list: Vec<GenerateHtmlParam>, output_path: &Path) {
+pub fn generate_html(
+    ubiquitous_list: Vec<GenerateHtmlParam>,
+    repo: &String,
+    branch: &String,
+    output_path: &Path,
+) {
     // 出力先ディレクトリが存在しない場合は作成する
     if let Some(parent) = output_path.parent() {
         fs::create_dir_all(parent).unwrap();
     }
-
-    let repo = std::env::var("GITHUB_REPOSITORY").unwrap_or_else(|_| "owner/repo".to_string());
-    let branch = std::env::var("GITHUB_REF_NAME").unwrap_or_else(|_| "main".to_string());
 
     let mut html = String::new();
     html.push_str("<html>\n");
@@ -96,8 +98,11 @@ mod tests {
             fs::create_dir_all(parent).unwrap();
         }
 
+        let repo = "owner/repo".to_string();
+        let branch = "main".to_string();
+
         // HTML ファイル生成関数を実行
-        generate_html(test_params, output_path);
+        generate_html(test_params, &repo, &branch, output_path);
 
         // 生成された HTML ファイルを読み込み
         let html_content = fs::read_to_string(output_path).unwrap();

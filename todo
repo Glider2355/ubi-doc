@@ -2,7 +2,7 @@
 - [x] コマンドライン実行できるようにする
 - [x] actionsからRustを実行する
 - [x] GitHubのURLを出力する
-- [ ] envはmain.rsから渡す
+- [x] envはmain.rsから渡す
 - [ ] teraでHTMLテンプレートを作成する
 - [ ] HTMLのデザインをいい感じにする
 - [ ] READMEを書く
