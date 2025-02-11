@@ -17,5 +17,5 @@
 - [x] optionalな値を考える
 - [x] 出力先ディレクトリを指定できるようにする
 - [x] CIを整備する
-- [ ] READMEを書く
+- [x] READMEを書く
 - [ ] marketplaceに公開する
