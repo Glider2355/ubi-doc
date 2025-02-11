@@ -6,6 +6,9 @@ Ubi Doc is an open-source GitHub Action that generates an HTML table representin
 
 When you include ubiquitous language definitions in your code documentation using special annotations, Ubi Doc parses these comments and generates an HTML file containing a comprehensive table of terms, contexts, and descriptions. This output facilitates clear communication and shared understanding of the project's terminology among team members.
 
+## Support Languages
+- PHP
+
 ## How to Use
 
 ### Writing Doc Comments
