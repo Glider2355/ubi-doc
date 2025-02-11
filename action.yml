@@ -6,16 +6,16 @@ branding:
   color: 'blue'
 
 inputs:
-  output:
-    description: '生成された HTML の出力先パス（リポジトリ内のパスを指定）'
+  output_dir:
+    description: 'output doc directory path'
     required: false
-    default: 'docs'
+    default: 'docs/ubi-doc'
   repo:
-    description: 'GitHubリポジトリ (owner/repo)'
+    description: 'GitHub repository (ex: owner/repo)'
     required: false
     default: 'owner/repo'
   branch:
-    description: 'ブランチ名 (例: main)'
+    description: 'branch name (ex: main)'
     required: false
     default: 'main'
 
@@ -31,4 +31,4 @@ runs:
     - '--input'
     - "."
     - '--output'
-    - ${{ inputs.output }}
+    - ${{ inputs.output_dir }}

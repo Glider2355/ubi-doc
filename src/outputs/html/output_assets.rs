@@ -5,22 +5,18 @@ use std::{
 };
 
 pub fn output_assets(rendered_html: &String, output_path: &Path) {
-    // 出力先ディレクトリ（まだなければ作成）
-    let assets_dir = output_path.join("ubi-doc");
-    fs::create_dir_all(&assets_dir).unwrap();
+    fs::create_dir_all(output_path).unwrap();
 
-    // レンダリング結果をHTMLファイルに書き込む
-    let mut file = File::create(assets_dir.join("index.html")).unwrap();
+    let mut file = File::create(output_path.join("index.html")).unwrap();
     file.write_all(rendered_html.as_bytes()).unwrap();
 
-    // script.js / style.css も同フォルダにコピー
     copy_file(
         "src/outputs/html/templates/script.js",
-        &assets_dir.join("script.js"),
+        &output_path.join("script.js"),
     );
     copy_file(
         "src/outputs/html/templates/style.css",
-        &assets_dir.join("style.css"),
+        &output_path.join("style.css"),
     );
 }
 
@@ -49,16 +45,13 @@ mod tests {
         let dummy_html = "<html><body>Test Content</body></html>".to_string();
         output_assets(&dummy_html, &output_path);
 
-        // HTMLは (output_path)/ubi-doc/ubiquitous.html に作られる
-        let ubi_dir = output_path.join("ubi-doc");
-        let html_file = ubi_dir.join("index.html");
+        let html_file = output_path.join("index.html");
         assert!(html_file.exists(), "ubiquitous.html should exist");
         let content = fs::read_to_string(&html_file).unwrap();
         assert_eq!(content, dummy_html);
 
-        // script.js, style.css も (output_path)/ubi-doc/script.js, (output_path)/ubi-doc/style.css
-        let script_path = ubi_dir.join("script.js");
-        let style_path = ubi_dir.join("style.css");
+        let script_path = output_path.join("script.js");
+        let style_path = output_path.join("style.css");
         assert!(script_path.exists(), "script.js should be copied");
         assert!(style_path.exists(), "style.css should be copied");
     }
