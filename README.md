@@ -121,3 +121,7 @@ jobs:
             --title "Add generated HTML via GitHub Actions" \
             --body "This Pull Request includes the latest auto-generated HTML files."
 ```
+
+### Auto-merging and Deployment
+- Auto-merge Generated PRs: Optionally, configure your workflow or additional automation to merge the auto-generated pull requests once they pass the required checks.
+- Deploy via GitHub Pages: Publish the generated HTML files (located in the output directory, e.g., docs) using GitHub Pages. This makes your ubiquitous language table publicly accessible.
