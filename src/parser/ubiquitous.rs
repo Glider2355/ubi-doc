@@ -1,8 +1,8 @@
 #[derive(Debug, PartialEq)]
 pub struct Ubiquitous {
-    pub class_name: Option<String>,
-    pub ubiquitous: Option<String>,
+    pub ubiquitous: String,
     pub context: Option<String>,
+    pub class_name: Option<String>,
     pub description: Option<String>,
     pub file_path: Option<String>,
     pub line_number: Option<usize>,
@@ -12,7 +12,7 @@ impl Ubiquitous {
     pub fn new() -> Self {
         Ubiquitous {
             class_name: None,
-            ubiquitous: None,
+            ubiquitous: String::new(),
             context: None,
             description: None,
             file_path: None,
@@ -26,7 +26,7 @@ impl Ubiquitous {
     }
 
     pub fn set_ubiquitous(mut self, ubiquitous: String) -> Self {
-        self.ubiquitous = Some(ubiquitous);
+        self.ubiquitous = ubiquitous;
         self
     }
 
@@ -52,7 +52,7 @@ impl Ubiquitous {
 
     pub fn is_all_none(&self) -> bool {
         self.class_name.is_none()
-            && self.ubiquitous.is_none()
+            && self.ubiquitous.is_empty()
             && self.context.is_none()
             && self.description.is_none()
     }

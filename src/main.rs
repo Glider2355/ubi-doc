@@ -30,13 +30,7 @@ fn main() {
 
     // 取得した情報をターミナルに表示（デバッグ用）
     for ubiquitous in &ubiquitous_list {
-        println!(
-            "ubiquitous: {}",
-            ubiquitous
-                .ubiquitous
-                .as_deref()
-                .unwrap_or("ubiquitousがNone")
-        );
+        println!("ubiquitous: {}", ubiquitous.ubiquitous);
         println!(
             "class_name: {}",
             ubiquitous
@@ -79,7 +73,7 @@ fn main() {
     for ubiquitous in ubiquitous_list.iter() {
         let row = UbiquitousRow::new()
             .set_class_name(ubiquitous.class_name.clone().unwrap_or_default())
-            .set_ubiquitous(ubiquitous.ubiquitous.clone().unwrap_or_default())
+            .set_ubiquitous(ubiquitous.ubiquitous.clone())
             .set_context(ubiquitous.context.clone().unwrap_or_default())
             .set_description(ubiquitous.description.clone().unwrap_or_default())
             .set_github_url(
