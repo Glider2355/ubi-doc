@@ -1,3 +1,4 @@
+use rayon::prelude::*;
 use std::path::Path;
 
 use crate::parser::{
@@ -11,7 +12,7 @@ use super::ubiquitous::Ubiquitous;
 pub enum FileType {
     Php,
     Kotlin,
-    Other(String), // 未知の拡張子など
+    Other(String),
 }
 
 impl FileType {
@@ -30,23 +31,27 @@ pub fn get_ubiquitous_list(path: &Path) -> Vec<Ubiquitous> {
         Err(_) => return vec![],
     };
 
-    // すべてのファイルを処理するので、ループして結果をまとめる
-    let mut all_results = Vec::new();
+    // parallel execution
+    let all_results: Vec<Ubiquitous> = code_files
+        .par_iter()
+        .map(|code_file| {
+            match FileType::from_extension(&code_file.extension) {
+                FileType::Php => {
+                    // PHP ファイルの場合の処理（Vec 型の結果を返す）
+                    get_ubiquitous(&code_file.code, &code_file.file_path)
+                }
+                FileType::Kotlin => {
+                    // Kotlin ファイルへの処理
+                    Vec::new()
+                }
+                FileType::Other(ext) => {
+                    eprintln!("Unknown file extension: {}", ext);
+                    Vec::new()
+                }
+            }
+        })
+        .flatten()
+        .collect();
 
-    for code_file in code_files {
-        match FileType::from_extension(&code_file.extension) {
-            FileType::Php => {
-                let ubiquitous = get_ubiquitous(&code_file.code, &code_file.file_path);
-                all_results.extend(ubiquitous);
-            }
-            FileType::Kotlin => {
-                // Kotlin ファイルへの処理
-            }
-            FileType::Other(ext) => {
-                // 未知の拡張子のファイルへの処理
-                eprintln!("Unknown file extension: {}", ext);
-            }
-        }
-    }
     all_results
 }
