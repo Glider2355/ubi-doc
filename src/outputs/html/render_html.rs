@@ -1,13 +1,18 @@
+use super::ubiquitous_rows::UbiquitousRows;
+use std::path::PathBuf;
 use tera::{Context, Tera};
 
-use super::ubiquitous_rows::UbiquitousRows;
-
 pub fn render_html(rows: UbiquitousRows) -> String {
+    // コンパイル時に設定されたリポジトリのルートパスを取得
+    let manifest_dir = env!("CARGO_MANIFEST_DIR");
+    let mut templates_path = PathBuf::from(manifest_dir);
+    templates_path.push("src/outputs/html/templates/*.html");
+
+    let tera = Tera::new(templates_path.to_str().unwrap())
+        .expect("Failed to init Tera with templates/*.html");
+
     let mut context = Context::new();
     context.insert("items", &rows.rows);
-
-    let tera = Tera::new("src/outputs/html/templates/*.html")
-        .expect("Failed to init Tera with templates/*.html");
 
     tera.render("ubiquitous.html", &context)
         .expect("Failed to render template")

@@ -44,10 +44,7 @@ pub fn get_ubiquitous_list(path: &Path) -> Vec<Ubiquitous> {
                     // Kotlin ファイルへの処理
                     Vec::new()
                 }
-                FileType::Other(ext) => {
-                    eprintln!("Unknown file extension: {}", ext);
-                    Vec::new()
-                }
+                FileType::Other(_ext) => Vec::new(),
             }
         })
         .flatten()

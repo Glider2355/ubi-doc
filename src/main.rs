@@ -28,40 +28,6 @@ fn main() {
     let input_path = Path::new(&args.input);
     let ubiquitous_list = get_ubiquitous_list(input_path);
 
-    // 取得した情報をターミナルに表示（デバッグ用）
-    for ubiquitous in &ubiquitous_list {
-        println!("ubiquitous: {}", ubiquitous.ubiquitous);
-        println!(
-            "class_name: {}",
-            ubiquitous
-                .class_name
-                .as_deref()
-                .unwrap_or("class_nameがNone")
-        );
-        println!(
-            "context: {}",
-            ubiquitous.context.as_deref().unwrap_or("contextがNone")
-        );
-        println!(
-            "description: {}",
-            ubiquitous
-                .description
-                .as_deref()
-                .unwrap_or("descriptionがNone")
-        );
-        println!(
-            "file_path: {}",
-            ubiquitous.file_path.as_deref().unwrap_or("file_pathがNone")
-        );
-        println!(
-            "line_number: {}",
-            ubiquitous
-                .line_number
-                .map(|n| n.to_string())
-                .unwrap_or_else(|| "line_numberがNone".to_string())
-        );
-    }
-
     // 出力ファイルのパスを取得
     let output_path = Path::new(&args.output);
 

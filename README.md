@@ -53,8 +53,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run Ubi Doc Action
-        uses: ./
+      - name: UbiDoc
+        uses: Glider2355/ubi-doc@v0.0.2
         with:
           # Directory path to output HTML
           output_dir: 'docs'

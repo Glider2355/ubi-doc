@@ -10,24 +10,28 @@ pub fn output_assets(rendered_html: &String, output_path: &Path) {
     let mut file = File::create(output_path.join("index.html")).unwrap();
     file.write_all(rendered_html.as_bytes()).unwrap();
 
+    // コンパイル時に設定されるリポジトリのルートパスを取得
+    let manifest_dir = env!("CARGO_MANIFEST_DIR");
+    let templates_dir = Path::new(manifest_dir).join("src/outputs/html/templates");
+
+    // script.js と style.css をコピー
     copy_file(
-        "src/outputs/html/templates/script.js",
+        &templates_dir.join("script.js"),
         &output_path.join("script.js"),
     );
     copy_file(
-        "src/outputs/html/templates/style.css",
+        &templates_dir.join("style.css"),
         &output_path.join("style.css"),
     );
 }
 
-fn copy_file(src: &str, dst: &PathBuf) {
+fn copy_file(src: &Path, dst: &PathBuf) {
     if let Some(parent) = dst.parent() {
         fs::create_dir_all(parent).unwrap();
     }
     fs::copy(src, dst).unwrap_or_else(|e| {
         panic!("Failed to copy from {:?} to {:?}: {}", src, dst, e);
     });
-    println!("Copied {:?} -> {:?}", src, dst);
 }
 
 // テストモジュール
