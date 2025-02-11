@@ -54,7 +54,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: UbiDoc
-        uses: Glider2355/ubi-doc@v0.0.3
+        uses: Glider2355/ubi-doc@v0.0.4
         with:
           # Directory path to output HTML
           output_dir: 'docs'
