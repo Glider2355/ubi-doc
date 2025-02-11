@@ -11,17 +11,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: コードをチェックアウト
+      - name: checkout
         uses: actions/checkout@v4
 
-      - name: Rust のセットアップ
+      - name: Rust Setup
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
 
-      - name: ビルドの実行
+      - name: build
         run: cargo build --verbose
 
-      - name: ユニットテストの実行
+      - name: execute tests
         run: cargo test --verbose
