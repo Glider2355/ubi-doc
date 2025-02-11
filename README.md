@@ -68,12 +68,12 @@ jobs:
           ls -la docs
           git fetch origin main
           git add docs
-          if git diff --cached --quiet origin/main -- docs; then
+          if git diff --cached --quiet "origin/main" -- "docs"; then
             echo "No differences found in ubi-doc. Exiting."
-            echo "::set-output name=difffound::false"
+            echo "difffound=false" >> "$GITHUB_OUTPUT"
           else
             echo "Differences found, continuing..."
-            echo "::set-output name=difffound::true"
+            echo "difffound=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Close existing auto-generated HTML PRs
@@ -89,7 +89,7 @@ jobs:
             --json number \
             --limit 100 \
             | jq -r '.[].number' \
-            | while read pr; do
+            | while read -r pr; do
                 echo "Closing PR #$pr"
                 gh pr close "$pr" --delete-branch
               done
