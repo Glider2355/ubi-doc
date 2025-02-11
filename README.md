@@ -1,34 +1,123 @@
 # Ubi Doc
-todo: 概要を書く
 
-## Usage
-todo: 使い方を書く
-- PR作成権限を付ける必要がある
+Ubi Doc is an open-source GitHub Action that generates an HTML table representing your ubiquitous language directly from your code's doc comments. By using specific annotations within your documentation, Ubi Doc automatically produces an HTML file that visually displays your project's core terms and their contexts.
 
-### Basic configuration
+## Overview
 
-```yaml
-name: Ubi Doc
+When you include ubiquitous language definitions in your code documentation using special annotations, Ubi Doc parses these comments and generates an HTML file containing a comprehensive table of terms, contexts, and descriptions. This output facilitates clear communication and shared understanding of the project's terminology among team members.
+
+## How to Use
+
+### Writing Doc Comments
+
+Add doc comments in your source code using the following annotations:
+
+- `@ubiquitous`: **Ubiquitous Language** – the term or phrase to document.
+- `@context`: **Context** – the context or scenario where the term is used.
+- `@description`: **Description** – an explanation of the term.
+
+For example (PHP):
+
+```php
+/**
+ * @ubiquitous Order
+ * @context E-commerce
+ * @description Represents a customer's purchase order.
+ */
+```
+
+### Adding the GitHub Action
+
+To integrate Ubi Doc into your workflow, add the following GitHub Action configuration to your repository.
+
+Example Basic configuration: 
+
+```yml
+name: Generate Ubiquitous
+
 on:
-  workflow_dispatch:
-  pull_request:
   push:
-    branches:
-      - main
-      - 'releases/*'
+    # your default branch
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  ubi-doc:
+  test-action:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
       pull-requests: write
-      checks: write
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Ubi Doc
-        uses: Glider2355/ubi-doc@v1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Ubi Doc Action
+        uses: ./
         with:
-          output: 'docs/generated.html'  # ouput HTML file path
+          # Directory path to output HTML
+          output_dir: 'docs'
+          repo: ${{ github.repository }}
+          branch: ${{ github.ref_name }}
+
+      - name: Check for differences in ubi-doc directory
+        id: diffcheck
+        run: |
+          echo "Checking for differences in ubi-doc compared to origin/main..."
+          ls -la docs
+          git fetch origin main
+          git add docs
+          if git diff --cached --quiet origin/main -- docs; then
+            echo "No differences found in ubi-doc. Exiting."
+            echo "::set-output name=difffound::false"
+          else
+            echo "Differences found, continuing..."
+            echo "::set-output name=difffound::true"
+          fi
+
+      - name: Close existing auto-generated HTML PRs
+        if: steps.diffcheck.outputs.difffound == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Closing existing auto-generated HTML PRs..."
+          # List previous PRs, extract their numbers, and close them one by one
+          gh pr list \
+            --search "head:auto-generated-html" \
+            --state open \
+            --json number \
+            --limit 100 \
+            | jq -r '.[].number' \
+            | while read pr; do
+                echo "Closing PR #$pr"
+                gh pr close "$pr" --delete-branch
+              done
+
+      - name: Create Pull Request (via gh CLI)
+        if: steps.diffcheck.outputs.difffound == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 1. Set Git user configuration
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 2. Create a unique branch name: auto-generated-html/<run_id>
+          BRANCH_NAME="auto-generated-html/${{ github.run_id }}"
+          git checkout -b "$BRANCH_NAME"
+
+          # 3. Commit the changes
+          git add docs
+          git commit -m $'chore: Add generated HTML\n\nAuto-commit by GitHub Actions.'
+
+          # 4. Push the branch to the remote repository
+          git push origin "$BRANCH_NAME"
+
+          # 5. Create a Pull Request
+          gh pr create \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --title "Add generated HTML via GitHub Actions" \
+            --body "This Pull Request includes the latest auto-generated HTML files."
 ```
