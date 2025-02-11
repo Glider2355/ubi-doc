@@ -1,0 +1,94 @@
+/* 全体の背景とフォント */
+body {
+  background-color: #f4f6f8;
+  font-family: 'Noto Sans JP', sans-serif;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+/* コンテナ設定 */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* タイトル */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+/* フィルタエリア */
+.filter-area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-area label {
+  font-weight: bold;
+}
+
+.filter-area input[type="search"],
+.filter-area select {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s;
+}
+
+.filter-area input[type="search"]:focus,
+.filter-area select:focus {
+  border-color: #0366d6;
+  outline: none;
+}
+
+/* テーブル */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+thead {
+  background-color: #f2f2f2;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* リンク */
+a {
+  color: #0366d6;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #024ea2;
+}
+
+/* 非表示用 */
+.hide {
+  display: none;
+}
