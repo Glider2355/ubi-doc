@@ -1,12 +1,12 @@
 use tree_sitter::Parser;
 use tree_sitter_kotlin as kotlin;
 
-use crate::parser::{
-    php::extract_ubiquitous::{extract_ubiquitous, ExtractUbiquitousParam},
-    ubiquitous::Ubiquitous,
-};
+use crate::parser::ubiquitous::Ubiquitous;
 
-use super::collect_class_docs::collect_class_docs;
+use super::{
+    collect_class_docs::collect_class_docs,
+    extract_ubiquitous::{extract_ubiquitous, ExtractUbiquitousParam},
+};
 
 pub fn get_ubiquitous(code: &str, file_path: &str) -> Vec<Ubiquitous> {
     let source_code = code.as_bytes();
