@@ -8,6 +8,7 @@ When you include ubiquitous language definitions in your code documentation usin
 
 ## Support Languages
 - PHP
+- kotlin
 
 ## How to Use
 
@@ -19,7 +20,7 @@ Add doc comments in your source code using the following annotations:
 - `@context`: **Context** – the context or scenario where the term is used.
 - `@description`: **Description** – an explanation of the term.
 
-For example (PHP):
+For example (PHP, kotlin):
 
 ```php
 /**
