@@ -13,3 +13,4 @@ tera = "1.19"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 rayon = "1.10"
+tree-sitter-kotlin = { git = "https://github.com/fwcd/tree-sitter-kotlin.git", rev = "c4ddea359a7ff4d92360b2efcd6cfce5dc25afe6" }

@@ -2,10 +2,11 @@ use rayon::prelude::*;
 use std::path::Path;
 
 use crate::parser::{
-    file_io::read_sources_from_dir::read_sources_from_dir, php::get_ubiquitous::get_ubiquitous,
+    file_io::read_sources_from_dir::read_sources_from_dir,
+    php::get_ubiquitous::get_ubiquitous as php_parser,
 };
 
-use super::ubiquitous::Ubiquitous;
+use super::{kotlin::get_ubiquitous::get_ubiquitous as kotlin_paser, ubiquitous::Ubiquitous};
 
 /// 拡張子を表す列挙型
 #[derive(Debug)]
@@ -38,11 +39,11 @@ pub fn get_ubiquitous_list(path: &Path) -> Vec<Ubiquitous> {
             match FileType::from_extension(&code_file.extension) {
                 FileType::Php => {
                     // PHP ファイルの場合の処理（Vec 型の結果を返す）
-                    get_ubiquitous(&code_file.code, &code_file.file_path)
+                    php_parser(&code_file.code, &code_file.file_path)
                 }
                 FileType::Kotlin => {
                     // Kotlin ファイルへの処理
-                    Vec::new()
+                    kotlin_paser(&code_file.code, &code_file.file_path)
                 }
                 FileType::Other(_ext) => Vec::new(),
             }
