@@ -9,6 +9,7 @@ When you include ubiquitous language definitions in your code documentation usin
 ## Support Languages
 - PHP
 - kotlin
+- Ruby
 
 ## How to Use
 
@@ -20,7 +21,7 @@ Add doc comments in your source code using the following annotations:
 - `@context`: **Context** – the context or scenario where the term is used.
 - `@description`: **Description** – an explanation of the term.
 
-For example (PHP, kotlin):
+For example (PHP, Kotlin):
 
 ```php
 /**
@@ -28,6 +29,14 @@ For example (PHP, kotlin):
  * @context E-commerce
  * @description Represents a customer's purchase order.
  */
+```
+
+For example (ruby):
+
+```ruby
+# @ubiquitous ubiquitous_lang
+# @context context_example
+# @description description_text
 ```
 
 ### Adding the GitHub Action
@@ -58,7 +67,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: UbiDoc
-        uses: Glider2355/ubi-doc@v0.0.4
+        uses: Glider2355/ubi-doc@v0.0.5
         with:
           # Directory path to output HTML
           output_dir: 'docs'
