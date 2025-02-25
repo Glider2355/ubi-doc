@@ -19,6 +19,10 @@ fn get_ubiquitous(class_doc: ExtractUbiquitousParam) -> Ubiquitous {
     let comment = class_doc.doc_comment.trim();
     let mut result = Ubiquitous::new();
 
+    if !comment.contains("@ubiquitous") {
+        return result;
+    }
+
     result = result.set_class_name(class_doc.class_name);
 
     for (line_index, line) in comment.lines().enumerate() {

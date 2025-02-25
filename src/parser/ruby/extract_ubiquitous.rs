@@ -79,7 +79,7 @@ mod tests {
     * @ubiquitous ubiquitous_lang
     */"#
             .to_string(),
-            file_path: "tmp/saple.kt".to_string(),
+            file_path: "tmp/sample.rb".to_string(),
             line_number: 2,
         }];
         let result = extract_ubiquitous(class_docs);
@@ -89,7 +89,7 @@ mod tests {
             Ubiquitous::new()
                 .set_class_name("class_name".to_string())
                 .set_ubiquitous("ubiquitous_lang".to_string())
-                .set_file_path("tmp/saple.kt".to_string())
+                .set_file_path("tmp/sample.rb".to_string())
                 .set_line_number(3)
         );
     }
@@ -105,7 +105,7 @@ mod tests {
     * @description description_text
     */"#
             .to_string(),
-            file_path: "tmp/saple.kt".to_string(),
+            file_path: "tmp/sample.rb".to_string(),
             line_number: 3,
         }];
         let result = extract_ubiquitous(class_docs);
@@ -116,7 +116,7 @@ mod tests {
             .set_ubiquitous("ubiquitous_lang".to_string())
             .set_context("context_example".to_string())
             .set_description("description_text".to_string())
-            .set_file_path("tmp/saple.kt".to_string())
+            .set_file_path("tmp/sample.rb".to_string())
             .set_line_number(5);
         assert_eq!(result[0], expected);
     }

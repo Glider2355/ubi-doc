@@ -5,7 +5,7 @@
     /* ブロックコメント */
     
     /**
-    * タグ無しのコメント
+    * タグありのコメント
     * @ubiquitous ubiquitous langage
     * @context context
     * @description description
@@ -26,9 +26,6 @@
 
     /**
     * タグ無しのコメント
-    * @ubiquitous ubiquitous langage2
-    * @context context2
-    * @description description2
     */
     class Sample2 {
         public $name;

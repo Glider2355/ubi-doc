@@ -907,6 +907,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tree-sitter-ruby"
+version = "0.23.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "be0484ea4ef6bb9c575b4fdabde7e31340a8d2dbc7d52b321ac83da703249f95"
+dependencies = [
+ "cc",
+ "tree-sitter-language",
+]
+
+[[package]]
 name = "typenum"
 version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -914,7 +924,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 
 [[package]]
 name = "ubi-doc"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "clap",
  "rayon",
@@ -925,6 +935,7 @@ dependencies = [
  "tree-sitter",
  "tree-sitter-kotlin",
  "tree-sitter-php",
+ "tree-sitter-ruby",
  "walkdir",
 ]
 
