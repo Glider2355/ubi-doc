@@ -97,7 +97,8 @@ mod tests {
         "#;
 
         let mut parser = Parser::new();
-        parser.set_language(&tree_sitter_java::language()).unwrap();
+        let language = tree_sitter_java::LANGUAGE;
+        parser.set_language(&language.into()).unwrap();
 
         let tree = parser.parse(code, None).expect("Failed to parse code");
         let root_node = tree.root_node();
@@ -127,7 +128,8 @@ mod tests {
         "#;
 
         let mut parser = Parser::new();
-        parser.set_language(&tree_sitter_java::language()).unwrap();
+        let language = tree_sitter_java::LANGUAGE;
+        parser.set_language(&language.into()).unwrap();
 
         let tree = parser.parse(code, None).expect("Failed to parse code");
         let root_node = tree.root_node();
@@ -155,7 +157,8 @@ mod tests {
         "#;
 
         let mut parser = Parser::new();
-        parser.set_language(&tree_sitter_java::language()).unwrap();
+        let language = tree_sitter_java::LANGUAGE;
+        parser.set_language(&language.into()).unwrap();
 
         let tree = parser.parse(code, None).expect("Failed to parse code");
         let root_node = tree.root_node();
@@ -192,7 +195,8 @@ mod tests {
         "#;
 
         let mut parser = Parser::new();
-        parser.set_language(&tree_sitter_java::language()).unwrap();
+        let language = tree_sitter_java::LANGUAGE;
+        parser.set_language(&language.into()).unwrap();
 
         let tree = parser.parse(code, None).expect("Failed to parse code");
         let root_node = tree.root_node();

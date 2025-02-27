@@ -870,16 +870,6 @@ dependencies = [
 
 [[package]]
 name = "tree-sitter"
-version = "0.19.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad726ec26496bf4c083fff0f43d4eb3a2ad1bba305323af5ff91383c0b6ecac0"
-dependencies = [
- "cc",
- "regex",
-]
-
-[[package]]
-name = "tree-sitter"
 version = "0.24.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a5387dffa7ffc7d2dae12b50c6f7aab8ff79d6210147c6613561fc3d474c6f75"
@@ -893,12 +883,12 @@ dependencies = [
 
 [[package]]
 name = "tree-sitter-java"
-version = "0.19.0"
+version = "0.23.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "301ae2ee7813e1bf935dc06db947642400645bbea8878431e1b31131488d5430"
+checksum = "0aa6cbcdc8c679b214e616fd3300da67da0e492e066df01bcf5a5921a71e90d6"
 dependencies = [
  "cc",
- "tree-sitter 0.19.5",
+ "tree-sitter-language",
 ]
 
 [[package]]
@@ -907,7 +897,7 @@ version = "0.3.9"
 source = "git+https://github.com/fwcd/tree-sitter-kotlin.git?rev=c4ddea359a7ff4d92360b2efcd6cfce5dc25afe6#c4ddea359a7ff4d92360b2efcd6cfce5dc25afe6"
 dependencies = [
  "cc",
- "tree-sitter 0.24.7",
+ "tree-sitter",
 ]
 
 [[package]]
@@ -952,7 +942,7 @@ dependencies = [
  "serde_json",
  "tempfile",
  "tera",
- "tree-sitter 0.24.7",
+ "tree-sitter",
  "tree-sitter-java",
  "tree-sitter-kotlin",
  "tree-sitter-php",

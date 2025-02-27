@@ -1,5 +1,4 @@
 use tree_sitter::Parser;
-use tree_sitter_java;
 
 use crate::parser::ubiquitous::Ubiquitous;
 
@@ -15,8 +14,9 @@ pub fn get_ubiquitous(code: &str, file_path: &str) -> Vec<Ubiquitous> {
     // Java 言語用のパーサを作成
     let mut parser = Parser::new();
     // Java の言語定義を設定
+    let language = tree_sitter_java::LANGUAGE;
     parser
-        .set_language(&tree_sitter_java::language())
+        .set_language(&language.into())
         .expect("Error loading Java grammar");
 
     let tree = parser.parse(source_code, None).unwrap();
