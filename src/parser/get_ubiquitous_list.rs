@@ -7,7 +7,11 @@ use crate::parser::{
 };
 
 use super::ruby::get_ubiquitous::get_ubiquitous as ruby_paser;
-use super::{kotlin::get_ubiquitous::get_ubiquitous as kotlin_paser, ubiquitous::Ubiquitous};
+use super::{
+    java::get_ubiquitous::get_ubiquitous as java_parser,
+    kotlin::get_ubiquitous::get_ubiquitous as kotlin_paser,
+    ubiquitous::Ubiquitous,
+};
 
 /// 拡張子を表す列挙型
 #[derive(Debug)]
@@ -15,6 +19,7 @@ pub enum FileType {
     Php,
     Kotlin,
     Ruby,
+    Java,
     Other(String),
 }
 
@@ -24,6 +29,7 @@ impl FileType {
             "php" => FileType::Php,
             "kt" => FileType::Kotlin,
             "rb" => FileType::Ruby,
+            "java" => FileType::Java,
             other => FileType::Other(other.to_string()),
         }
     }
@@ -49,6 +55,10 @@ pub fn get_ubiquitous_list(path: &Path) -> Vec<Ubiquitous> {
                     kotlin_paser(&code_file.code, &code_file.file_path)
                 }
                 FileType::Ruby => ruby_paser(&code_file.code, &code_file.file_path),
+                FileType::Java => {
+                    // Java ファイルへの処理
+                    java_parser(&code_file.code, &code_file.file_path)
+                }
                 FileType::Other(_ext) => Vec::new(),
             }
         })
