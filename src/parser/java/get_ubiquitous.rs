@@ -8,7 +8,6 @@ use super::{
 };
 
 pub fn get_ubiquitous(code: &str, file_path: &str) -> Vec<Ubiquitous> {
-    println!("Java parser called for file: {}", file_path);
     let source_code = code.as_bytes();
 
     // Java 言語用のパーサを作成
@@ -22,11 +21,8 @@ pub fn get_ubiquitous(code: &str, file_path: &str) -> Vec<Ubiquitous> {
     let tree = parser.parse(source_code, None).unwrap();
     let root_node = tree.root_node();
 
-    println!("Java parser: root_node kind = {}", root_node.kind());
-
     // ノードを再帰的に巡回しコメントを収集
     let class_docs = collect_class_docs(root_node, source_code);
-    println!("Java parser: found {} class docs", class_docs.len());
 
     let params = class_docs
         .into_iter()
@@ -40,6 +36,5 @@ pub fn get_ubiquitous(code: &str, file_path: &str) -> Vec<Ubiquitous> {
 
     // コメント文字列をクリーニング
     let result = extract_ubiquitous(params);
-    println!("Java parser: extracted {} ubiquitous", result.len());
     result
 }
