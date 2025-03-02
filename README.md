@@ -7,8 +7,10 @@ Ubi Doc is an open-source GitHub Action that generates an HTML table representin
 When you include ubiquitous language definitions in your code documentation using special annotations, Ubi Doc parses these comments and generates an HTML file containing a comprehensive table of terms, contexts, and descriptions. This output facilitates clear communication and shared understanding of the project's terminology among team members.
 
 ## Support Languages
+
 - PHP
-- kotlin
+- Kotlin
+- Java
 - Ruby
 
 ## How to Use
@@ -21,7 +23,7 @@ Add doc comments in your source code using the following annotations:
 - `@context`: **Context** – the context or scenario where the term is used.
 - `@description`: **Description** – an explanation of the term.
 
-For example (PHP, Kotlin):
+For example (PHP, Kotlin, Java):
 
 ```php
 /**
@@ -43,7 +45,7 @@ For example (ruby):
 
 To integrate Ubi Doc into your workflow, add the following GitHub Action configuration to your repository.
 
-Example Basic configuration: 
+Example Basic configuration:
 
 ```yml
 name: Generate Ubiquitous
